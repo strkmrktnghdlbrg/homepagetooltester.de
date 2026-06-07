@@ -1,0 +1,354 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { getAffiliateUrl } from "../lib/affiliate";
+
+// --- Daten laden -----------------------------------------------------------
+const allBuilders = await getCollection("builders");
+const builders = allBuilders
+  .map((b) => b.data)
+  .sort((a, b) => b.scoreOverall - a.scoreOverall);
+
+const ranking = builders.slice(0, 4);
+const heroTop = builders.slice(0, 3);
+
+const usecases = (await getCollection("usecases"))
+  .map((u) => u.data)
+  .sort((a, b) => a.title.localeCompare(b.title, "de"));
+
+const articles = (await getCollection("articles"))
+  .map((a) => a.data)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 3);
+
+// --- Helfer ----------------------------------------------------------------
+const de = (n: number) => n.toFixed(1).replace(".", ",");
+
+// priceNote auf den aussagekräftigen Teil kürzen (führendes "/Monat" entfernen,
+// da im Ranking bereits "ab X €/Mon." steht)
+function rankNote(priceNote: string, deServer: boolean): string {
+  let note = priceNote.replace(/^\s*\/?\s*Monat\s*(·|-)?\s*/i, "").trim();
+  if (deServer) {
+    note = note ? `${note} · Server in DE` : "Server in DE";
+  }
+  return note ? `· ${note}` : "";
+}
+function stars(score: number) {
+  const full = Math.round(score);
+  return { full, empty: 5 - full };
+}
+
+// Trust-Bar: getestete Anbieter + bekannte Referenz-Marken (statisch)
+const trustNames = [
+  ...builders.map((b) => b.name),
+  "GoDaddy",
+  "WordPress",
+];
+
+// Direkt-Duelle (statische Paare, Vergleich liegt auf der Money-Page)
+const duels = [
+  ["Wix", "Jimdo"],
+  ["Squarespace", "Wix"],
+  ["Shopify", "Wix"],
+  ["IONOS", "Jimdo"],
+  ["Wix", "WordPress"],
+  ["Jimdo", "Site123"],
+];
+
+// Methodik-Kriterien (6 feste Testkriterien)
+const criteria = [
+  { label: "Bedienung & Editor", width: 92 },
+  { label: "Design & Vorlagen", width: 88 },
+  { label: "Funktionsumfang", width: 80 },
+  { label: "SEO & Marketing", width: 85 },
+  { label: "Preis-Leistung", width: 78 },
+  { label: "Support & Hilfe", width: 90 },
+];
+
+const totalTested = Math.max(builders.length, 14);
+---
+
+<BaseLayout
+  title="HomepageTooltester - Homepage-Baukasten Vergleich & Test 2026"
+  description="Unabhängiger Vergleich der besten Homepage-Baukästen 2026: Wix, Jimdo, IONOS, Squarespace, Shopify und Site123. Transparente Scores aus 6 Testkriterien statt Werbeversprechen."
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="badge badge-gold">★ Testsieger-Ranking 2026 · Stand Juni 2026</span>
+      <h1>Der richtige <span class="hl">Homepage-Baukasten</span> in unter 5 Minuten gefunden.</h1>
+      <p class="sub">
+        Wir testen Wix, Jimdo, IONOS &amp; Co. unabhängig und nach festen Kriterien.
+        Transparente Scores statt Werbeversprechen.
+      </p>
+      <div class="hero-cta">
+        <a href="#ranking" class="btn btn-light">Zum Vergleich 2026</a>
+        <a href="/baukasten-finder" class="btn btn-ghost" style="background:rgba(255,255,255,.16);color:#fff">Baukasten-Finder starten →</a>
+      </div>
+      <div class="hero-meta">
+        <span><b>{totalTested}</b> Baukästen getestet</span>
+        <span><b>120+</b> Stunden im Test</span>
+        <span><b>6</b> Bewertungskriterien</span>
+        <span><b>100%</b> werbefrei finanziert</span>
+      </div>
+      {heroTop.length > 0 && (
+        <div class="hero-shot">
+          <div class="bar"><span></span><span></span><span></span></div>
+          <div class="fakeui">
+            {heroTop.map((b) => (
+              <div class="row">
+                <div class="s">{de(b.scoreOverall)}</div>
+                <div class="t">{b.name.toUpperCase()} · Gesamtscore</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust">
+    <div class="wrap">
+      {trustNames.map((n) => <span class="t-logo">{n}</span>)}
+    </div>
+  </div>
+
+  <!-- RANKING -->
+  <section id="ranking">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Das große Ranking</span>
+        <h2>Top Homepage-Baukästen 2026</h2>
+        <p>
+          Sortiert nach Gesamt-Score aus 6 Testkriterien. Jeder Anbieter wurde mit
+          einer echten Test-Website geprüft.
+        </p>
+      </div>
+      <div class="ranking">
+        {ranking.map((b, i) => {
+          const s = stars(b.scoreOverall);
+          return (
+            <div class={`rank-row ${i === 0 ? "winner" : ""}`}>
+              <div class="rank-num">{i + 1}</div>
+              <div class="rank-tool">
+                <span class="name">
+                  {b.name}
+                  {i === 0 && b.award && <span class="badge badge-gold">Testsieger</span>}
+                </span>
+                <span class="for">Beste Wahl für {b.bestFor}</span>
+                <div class="subscores">
+                  <span class="chip">Design {de(b.scores.design)}</span>
+                  <span class="chip">Bedienung {de(b.scores.bedienung)}</span>
+                  <span class="chip">SEO {de(b.scores.seo)}</span>
+                  <span class="chip">Support {de(b.scores.support)}</span>
+                </div>
+              </div>
+              <div class="score">
+                <span class="big">{de(b.scoreOverall)}</span>
+                <span class="stars">
+                  {Array.from({ length: s.full }).map(() => <span>★</span>)}
+                  {Array.from({ length: s.empty }).map(() => <span class="empty">★</span>)}
+                </span>
+              </div>
+              <div class="rank-meta">
+                ab <b>{b.priceFrom}/Mon.</b> {rankNote(b.priceNote, b.deServer)}
+              </div>
+              <div class="rank-cta">
+                <a href={getAffiliateUrl(b.slug).url} target="_blank" class="btn btn-primary btn-sm" rel="sponsored nofollow">Zum Anbieter</a>
+                <a href={`/test/${b.slug}`} class="btn btn-outline btn-sm" style="justify-content:center">Testbericht</a>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style="text-align:center;margin-top:28px">
+        <a href="/baukasten-vergleich" class="btn btn-ghost">
+          Alle {totalTested} Baukästen in der Vergleichstabelle →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINDER -->
+  <section id="finder">
+    <div class="wrap">
+      <div class="finder">
+        <div>
+          <span class="eyebrow" style="color:var(--color-sunshine)">Interaktives Tool</span>
+          <h2>Baukasten-Finder: In 6 Fragen zum passenden Tool.</h2>
+          <p>
+            Du weißt nicht, welcher Anbieter zu deinem Projekt passt? Beantworte ein
+            paar kurze Fragen und erhalte eine persönliche Empfehlung - kostenlos und
+            ohne Anmeldung.
+          </p>
+          <a href="/baukasten-finder" class="btn btn-light" style="margin-top:24px">Finder jetzt starten</a>
+        </div>
+        <div class="q-card">
+          <span class="step">Frage 1 von 6</span>
+          <div class="q">Was möchtest du erstellen?</div>
+          <a href="/baukasten-finder" class="q-opt"><span class="k">A</span> Unternehmens-Website</a>
+          <a href="/baukasten-finder" class="q-opt"><span class="k">B</span> Online-Shop</a>
+          <a href="/baukasten-finder" class="q-opt"><span class="k">C</span> Portfolio / Blog</a>
+          <a href="/baukasten-finder" class="q-opt"><span class="k">D</span> Website für ein Event</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section id="usecase" style="background:var(--color-pewter)">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Nach Anwendungsfall</span>
+        <h2>Welcher Baukasten passt zu deinem Projekt?</h2>
+        <p>
+          Für jede Branche gelten andere Anforderungen. Wir haben für jeden
+          Anwendungsfall den besten Anbieter ermittelt.
+        </p>
+      </div>
+      <div class="usecase-grid">
+        {usecases.map((u) => (
+          <a class="uc" href={`/anwendungsfall/${u.slug}`}>
+            <div class="ico">{u.accentEmoji}</div>
+            <h3>{u.heroHighlight}</h3>
+            <p>{u.lede}</p>
+            <span class="link">Empfehlung ansehen →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- DUELS -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Direkt-Vergleiche</span>
+        <h2>Die beliebtesten Duelle</h2>
+      </div>
+      <div class="duel-grid">
+        {duels.map(([a, b]) => (
+          <a class="duel" href="/baukasten-vergleich">
+            <div class="vs">{a} <span class="x">VS</span> {b}</div>
+            <div class="link">Vergleich lesen →</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section>
+    <div class="wrap">
+      <div class="method-box">
+        <div>
+          <span class="eyebrow">E-E-A-T · Transparenz</span>
+          <h2>So testen wir.</h2>
+          <p class="muted" style="margin-top:14px;font-size:17px">
+            Jeder Baukasten durchläuft denselben Test mit einer echten Website. Wir
+            bewerten 6 Kriterien und finanzieren uns über Provisionen - ohne dass das
+            die Noten beeinflusst.
+          </p>
+          <a href="/ueber-uns" class="btn btn-outline" style="margin-top:22px">Vollständige Methodik →</a>
+        </div>
+        <div class="crit">
+          {criteria.map((c, i) => (
+            <div class="crit-item">
+              <div class="w">Kriterium {i + 1}</div>
+              <div class="l">{c.label}</div>
+              <div class="bar"><i style={`width:${c.width}%`}></i></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <section id="blog" style="background:var(--color-pewter)">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Ratgeber</span>
+        <h2>Frisch aus dem Magazin</h2>
+      </div>
+      <div class="blog-grid">
+        {articles.map((a) => (
+          <a class="post" href={`/ratgeber/${a.slug}`}>
+            <div class="thumb" style={`background-image:url('${a.image.url}')`}></div>
+            <div class="body">
+              <span class="cat">{a.category}</span>
+              <h3>{a.title}</h3>
+              <p class="muted" style="font-size:14px">{a.excerpt}</p>
+              <div class="meta">{a.readingTime} Lesezeit · {a.author}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div style="text-align:center;margin-top:32px">
+        <a href="/ratgeber" class="btn btn-ghost">Alle Ratgeber ansehen →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Häufige Fragen</span>
+        <h2>Gut zu wissen</h2>
+      </div>
+      <div class="faq-wrap">
+        <details class="faq" open>
+          <summary>Sind eure Tests wirklich unabhängig?</summary>
+          <p>
+            Ja. Wir testen jeden Baukasten mit einer echten Website nach denselben 6
+            Kriterien. Wir erhalten zwar Provisionen, wenn du über einen Link einen
+            Vertrag abschließt - das beeinflusst aber weder die Noten noch das Ranking.
+          </p>
+        </details>
+        <details class="faq">
+          <summary>Welcher Homepage-Baukasten ist der beste?</summary>
+          <p>
+            In unserem Test 2026 liegt {builders[0]?.name ?? "Wix"} mit einem
+            Gesamtscore von {de(builders[0]?.scoreOverall ?? 4.8)} vorne. „Den besten"
+            gibt es aber nicht pauschal - für einen Online-Shop oder ein Portfolio kann
+            ein anderer Anbieter besser passen. Nutze dafür unseren Baukasten-Finder.
+          </p>
+        </details>
+        <details class="faq">
+          <summary>Gibt es auch kostenlose Baukästen?</summary>
+          <p>
+            Ja, mehrere Anbieter haben Gratis-Tarife. Diese zeigen meist Fremdwerbung
+            und erlauben keine eigene Domain. Für eine professionelle Website empfehlen
+            wir einen günstigen Bezahltarif.
+          </p>
+        </details>
+        <details class="faq">
+          <summary>Wie aktuell sind die Testergebnisse?</summary>
+          <p>
+            Wir prüfen die Anbieter laufend. Das aktuelle Ranking hat den Stand Juni
+            2026. Größere Updates der Tools fließen zeitnah in unsere Bewertungen ein.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section>
+    <div class="wrap">
+      <div class="finalcta">
+        <h2>Bereit für deine eigene Website?</h2>
+        <p>
+          Starte mit unserem Testsieger oder finde in 6 Fragen das Tool, das wirklich
+          zu dir passt.
+        </p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <a href="#ranking" class="btn btn-light">Testsieger ansehen</a>
+          <a href="/baukasten-finder" class="btn btn-primary">Baukasten-Finder starten</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

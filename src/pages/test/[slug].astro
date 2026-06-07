@@ -1,0 +1,200 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ScoreCard from "../../components/ScoreCard.astro";
+
+export async function getStaticPaths() {
+  const builders = await getCollection("builders");
+  return builders.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, builders },
+  }));
+}
+
+const { entry, builders } = Astro.props;
+const b = entry.data;
+const { Content } = await render(entry);
+
+const de = (n: number) => n.toFixed(1).replace(".", ",");
+
+// Verdict stars (rounded full stars) for the Kurzfazit headline
+const full = Math.round(b.scoreOverall);
+const verdictStars = "★★★★★".slice(0, full) + "☆☆☆☆☆".slice(full);
+
+// Initials for byline/author avatar (E-E-A-T)
+const author = "Mason Kuhn";
+const authorRole = "Redakteur Website-Tools";
+const authorBio =
+  "Testet seit über 8 Jahren Homepage-Baukästen und hat über 40 Tools praktisch geprüft. Für diesen Test hat er mit " +
+  b.name +
+  " eine vollständige Website inkl. aller Kernfunktionen aufgebaut.";
+const initials = author
+  .split(" ")
+  .map((w) => w[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+
+// TOC sections (matching the prose H2-Anker)
+const toc = [
+  { id: "bedienung", label: "Bedienung & Editor" },
+  { id: "design", label: "Design & Vorlagen" },
+  { id: "funktionen", label: "Funktionen & KI" },
+  { id: "bewertung", label: "Bewertung im Detail" },
+  { id: "kosten", label: "Kosten & Tarife" },
+];
+
+// FAQ - generisch je Baukasten aus den Daten abgeleitet
+const freeText =
+  b.free === "yes"
+    ? `Ja, ${b.name} bietet eine dauerhaft kostenlose Version. Für eine professionelle Website mit eigener Domain ist jedoch ein Bezahltarif ab ${b.priceFrom}/Monat sinnvoll.`
+    : b.free === "partial"
+      ? `${b.name} bietet eine kostenlose Testversion bzw. einen eingeschränkten Gratis-Tarif - meist mit Anbieter-Werbung und ohne eigene Domain. Für eine professionelle Website ist ein Bezahltarif ab ${b.priceFrom}/Monat nötig.`
+      : `Nein, ${b.name} bietet keinen dauerhaft kostenlosen Tarif. Der Einstieg beginnt bei ${b.priceFrom}/Monat, meist mit kostenloser Testphase.`;
+
+const faqs = [
+  { q: `Ist ${b.name} kostenlos nutzbar?`, a: freeText },
+  {
+    q: `Eignet sich ${b.name} für einen Online-Shop?`,
+    a: b.shop
+      ? `Ja, ${b.name} bietet E-Commerce-Funktionen. Für einen Online-Shop ist in der Regel ein höherwertiger Business- bzw. Shop-Tarif nötig.`
+      : `${b.name} ist primär auf klassische Websites ausgelegt. Wer einen vollwertigen Online-Shop plant, sollte einen shop-orientierten Baukasten wie Shopify prüfen.`,
+  },
+  {
+    q: `Für wen eignet sich ${b.name} am besten?`,
+    a: `${b.name} eignet sich besonders für: ${b.bestFor}. Welcher Baukasten am besten passt, hängt von deinem Projekt ab - unser Baukasten-Finder hilft bei der Entscheidung.`,
+  },
+];
+
+// Alternativen: bis zu 3 andere Builder (nach Rang)
+const alternatives = builders
+  .filter((x) => x.id !== entry.id)
+  .sort((x, y) => x.data.rank - y.data.rank)
+  .slice(0, 3);
+
+const pageTitle = `${b.name} im Test 2026: Erfahrungen, Kosten & Bewertung`;
+const pageDesc = b.verdict;
+---
+
+<BaseLayout title={`${pageTitle} - HomepageTooltester`} description={pageDesc}>
+  <div class="wrap">
+    <div class="crumb">
+      <a href="/">Home</a> › <a href="/baukasten-vergleich">Testberichte</a> ›
+      <span>{b.name}</span>
+    </div>
+
+    <div class="layout">
+      <!-- MAIN -->
+      <div class="content">
+        {b.award && <span class="badge badge-gold">★ {b.award}</span>}
+        <h1>{b.name} im Test 2026: Erfahrungen, Kosten & Bewertung</h1>
+        <p class="lede">{b.tagline}</p>
+        <div class="byline">
+          <span class="av">{initials}</span>
+          <span>
+            Von <b>{author}</b> · Geprüft am 1. Juni 2026 · 11 Min. Lesezeit
+          </span>
+        </div>
+
+        <!-- VERDICT / Kurzfazit -->
+        <div class="verdict" style="margin-top:30px">
+          <h3>
+            Kurzfazit <span class="stars">{verdictStars} {de(b.scoreOverall)}/5</span>
+          </h3>
+          <p class="muted" style="margin:0">{b.verdict}</p>
+        </div>
+
+        <!-- PROS / CONS -->
+        <div class="proscons">
+          <div class="pc pro">
+            <h3>👍 Das spricht für {b.name}</h3>
+            <ul>
+              {b.pros.map((p) => <li>{p}</li>)}
+            </ul>
+          </div>
+          <div class="pc con">
+            <h3>👎 Das spricht dagegen</h3>
+            <ul>
+              {b.cons.map((c) => <li>{c}</li>)}
+            </ul>
+          </div>
+        </div>
+
+        <!-- PROSE (Markdown-Body) -->
+        <div class="prose">
+          <Content />
+        </div>
+
+        <!-- AUTHOR E-E-A-T -->
+        <div class="authorbox">
+          <span class="av">{initials}</span>
+          <div>
+            <span class="nm">{author}</span> · <span class="rl">{authorRole}</span>
+            <p>{authorBio}</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <h2 style="margin:10px 0 18px">Häufige Fragen zu {b.name}</h2>
+        {
+          faqs.map((f, i) => (
+            <details class="faq" open={i === 0}>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+
+      <!-- ASIDE: ScoreCard + TOC -->
+      <aside class="aside">
+        <ScoreCard builder={b} />
+        <div class="toc">
+          <h4>Inhalt</h4>
+          {toc.map((t) => <a href={`#${t.id}`}>{t.label}</a>)}
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- ALTERNATIVES -->
+  {
+    alternatives.length > 0 && (
+      <div class="alts">
+        <div class="wrap">
+          <span class="eyebrow">Alternativen</span>
+          <h2 style="margin:10px 0 0">
+            Wie schlägt sich {b.name} gegen die Konkurrenz?
+          </h2>
+          <div class="altgrid">
+            {alternatives.map((alt) => (
+              <div class="alt">
+                <div class="h">
+                  <span class="lg" style={`background:${alt.data.color}`}>
+                    {alt.data.logoText}
+                  </span>
+                  <span class="nm">{alt.data.name}</span>
+                  <span class="sc">{de(alt.data.scoreOverall)}</span>
+                </div>
+                <p>{alt.data.tagline}</p>
+                <a href={`/test/${alt.data.slug}`} class="btn btn-ghost btn-sm">
+                  Zum {alt.data.name}-Test →
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  <!-- Affiliate-Disclaimer -->
+  <div class="wrap">
+    <p class="disclaimer" style="margin:30px auto 50px">
+      Transparenz-Hinweis: Einige Links auf dieser Seite sind Affiliate-Links.
+      Schließt du über einen solchen Link einen Vertrag ab, erhalten wir eine
+      Provision. Für dich entstehen keine zusätzlichen Kosten. Diese Finanzierung
+      hat keinen Einfluss auf unsere Testergebnisse und Platzierungen.
+    </p>
+  </div>
+</BaseLayout>

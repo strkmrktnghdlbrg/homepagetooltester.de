@@ -1,0 +1,50 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Kontakt | HomepageTooltester"
+  description="Fragen, Feedback oder ein Hinweis zu einem Test? Schreib dem Team von HomepageTooltester."
+>
+  <section>
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;max-width:980px">
+      <div>
+        <span class="eyebrow">Kontakt</span>
+        <h1 style="font-size:40px;margin:10px 0 14px">Schreib uns</h1>
+        <p class="muted">Du hast eine Frage, einen Hinweis zu einem Test oder ein Anliegen als Anbieter? Wir freuen uns über deine Nachricht und antworten in der Regel innerhalb von zwei Werktagen.</p>
+        <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">✉️</span><span class="muted">redaktion@homepagetooltester.de</span></div>
+          <div style="display:flex;gap:10px;align-items:center"><span style="font-size:20px">🔒</span><span class="muted">Deine Daten werden ausschließlich zur Bearbeitung deiner Anfrage genutzt.</span></div>
+        </div>
+      </div>
+
+      <form
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        style="background:var(--color-pewter);border-radius:var(--radius-card);padding:28px;display:flex;flex-direction:column;gap:14px"
+      >
+        <input type="hidden" name="access_key" value="b65f4e95-6ac7-4003-a46a-fe4e08b120e2" />
+        <input type="hidden" name="subject" value="Neue Kontaktanfrage über HomepageTooltester" />
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
+
+        <label style="font-weight:700;font-size:14px">
+          Name
+          <input type="text" name="name" required placeholder="Dein Name"
+            style="width:100%;margin-top:6px;padding:11px 14px;border:1px solid #e2e2ec;border-radius:var(--radius-btn);font-family:inherit;font-size:15px" />
+        </label>
+        <label style="font-weight:700;font-size:14px">
+          E-Mail
+          <input type="email" name="email" required placeholder="du@beispiel.de"
+            style="width:100%;margin-top:6px;padding:11px 14px;border:1px solid #e2e2ec;border-radius:var(--radius-btn);font-family:inherit;font-size:15px" />
+        </label>
+        <label style="font-weight:700;font-size:14px">
+          Nachricht
+          <textarea name="message" required rows="5" placeholder="Wie können wir helfen?"
+            style="width:100%;margin-top:6px;padding:11px 14px;border:1px solid #e2e2ec;border-radius:var(--radius-btn);font-family:inherit;font-size:15px;resize:vertical"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary" style="margin-top:4px">Nachricht senden</button>
+        <p class="muted" style="font-size:12px">Mit dem Absenden stimmst du der Verarbeitung deiner Angaben zur Bearbeitung der Anfrage zu.</p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,40 @@
+---
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+
+const links = [
+  { href: "/baukasten-vergleich", label: "Baukasten-Vergleich" },
+  { href: "/test/wix", label: "Testberichte", match: "/test" },
+  { href: "/anwendungsfall/restaurant", label: "Anwendungsfall", match: "/anwendungsfall" },
+  { href: "/ratgeber", label: "Ratgeber" },
+  { href: "/ratgeber", label: "Kosten" },
+  { href: "/baukasten-finder", label: "Tools" },
+];
+---
+<header class="site-header">
+  <div class="wrap nav">
+    <a href="/" class="logo"><span class="mark">★</span> HomepageTooltester</a>
+    <nav class="navlinks">
+      {links.map((l) => (
+        <a href={l.href} class={isActive(l.match ?? l.href) ? "active" : ""}>{l.label}</a>
+      ))}
+    </nav>
+    <div class="nav-cta">
+      <a href="/baukasten-finder" class="btn btn-primary btn-sm">Baukasten finden</a>
+      <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" aria-label="Mobile Navigation">
+  <div class="drawer-head">
+    <a href="/" class="logo"><span class="mark">★</span> HomepageTooltester</a>
+    <button class="drawer-close" id="drawer-close" aria-label="Menü schließen">×</button>
+  </div>
+  {links.map((l) => (
+    <a href={l.href} class={`dl ${isActive(l.match ?? l.href) ? "active" : ""}`}>{l.label}</a>
+  ))}
+  <a href="/baukasten-finder" class="btn btn-primary">Baukasten finden</a>
+</aside>

@@ -1,0 +1,147 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+// Alle Artikel laden, neueste zuerst
+const articlesRaw = await getCollection("articles");
+const articles = articlesRaw.sort(
+  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
+);
+
+// Statische Kategorie-Filter aus den vorhandenen Artikeln ableiten
+const categories = [...new Set(articles.map((a) => a.data.category))].sort();
+
+// Deutsches Datum
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("de-DE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+const pageTitle = "Ratgeber & Magazin: Website-Baukästen verstehen";
+const pageDesc =
+  "Unabhängige Ratgeber rund um Homepage-Baukästen: Kosten, SEO, KI-Funktionen und Schritt-für-Schritt-Anleitungen - sachlich erklärt vom HomepageTooltester-Team.";
+---
+
+<BaseLayout title={`${pageTitle} - HomepageTooltester`} description={pageDesc}>
+  <!-- PAGE HEAD -->
+  <div class="wrap">
+    <div class="crumb">
+      <a href="/">Home</a> › <span>Ratgeber</span>
+    </div>
+    <div class="pagehead">
+      <span class="eyebrow">Ratgeber & Magazin</span>
+      <h1>Website-Baukästen verstehen, bevor du dich entscheidest</h1>
+      <p>
+        Kosten, SEO, KI-Funktionen und praktische Anleitungen: Hier sammeln wir
+        unsere unabhängigen Ratgeber rund um Homepage-Baukästen. Sachlich
+        erklärt, ohne Marketing-Versprechen - damit du den passenden Anbieter
+        findest.
+      </p>
+      <div class="meta">
+        <span><b>{articles.length}</b> Artikel</span>
+        <span><b>{categories.length}</b> Themengebiete</span>
+        <span>Unabhängig & werbefinanziert</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KATEGORIE-FILTER (statisch) -->
+  <div class="filterbar">
+    <div class="wrap">
+      <span class="lbl">Thema:</span>
+      <button class="pill on" data-filter="all">Alle</button>
+      {
+        categories.map((cat) => (
+          <button class="pill" data-filter={cat}>
+            {cat}
+          </button>
+        ))
+      }
+      <div class="right">
+        <a href="/baukasten-finder" class="btn btn-primary btn-sm"
+          >Passenden Baukasten finden →</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTIKEL-GRID -->
+  <section style="padding-top:40px">
+    <div class="wrap">
+      <div class="blog-grid" id="articleGrid">
+        {
+          articles.map((a) => (
+            <a
+              class="post"
+              href={`/ratgeber/${a.data.slug}`}
+              data-cat={a.data.category}
+            >
+              <div
+                class="thumb"
+                style={`background-image:url('${a.data.image.url}')`}
+              />
+              <div class="body">
+                <span class="cat">{a.data.category}</span>
+                <h3>{a.data.title}</h3>
+                <p class="muted" style="font-size:14px">
+                  {a.data.excerpt}
+                </p>
+                <div class="meta">
+                  {fmtDate(a.data.date)} · {a.data.readingTime} Lesezeit ·{" "}
+                  {a.data.author}
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+      <p
+        class="muted"
+        id="emptyState"
+        style="display:none;text-align:center;padding:40px 0"
+      >
+        Für dieses Thema gibt es aktuell noch keinen Artikel.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="wrap" style="margin-top:30px">
+    <div class="finalcta">
+      <span class="eyebrow" style="color:var(--color-sunshine)">Unentschlossen?</span>
+      <h2>Lass uns deinen Baukasten finden</h2>
+      <p>
+        Beantworte ein paar kurze Fragen zu deinem Projekt und erhalte eine
+        Empfehlung, die wirklich zu dir passt.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="/baukasten-finder" class="btn btn-primary">Baukasten-Finder starten</a>
+        <a href="/baukasten-vergleich" class="btn btn-light">Zum großen Vergleich</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const pills = document.querySelectorAll<HTMLButtonElement>(".filterbar .pill");
+    const cards = document.querySelectorAll<HTMLAnchorElement>("#articleGrid .post");
+    const empty = document.getElementById("emptyState");
+
+    pills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        const filter = pill.dataset.filter;
+        pills.forEach((p) => p.classList.remove("on"));
+        pill.classList.add("on");
+
+        let visible = 0;
+        cards.forEach((card) => {
+          const show = filter === "all" || card.dataset.cat === filter;
+          card.style.display = show ? "" : "none";
+          if (show) visible++;
+        });
+        if (empty) empty.style.display = visible === 0 ? "block" : "none";
+      });
+    });
+  </script>
+</BaseLayout>

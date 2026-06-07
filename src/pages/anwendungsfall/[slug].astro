@@ -1,0 +1,293 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAffiliateUrl } from "../../lib/affiliate";
+
+export async function getStaticPaths() {
+  const usecases = await getCollection("usecases");
+  const builders = await getCollection("builders");
+  return usecases.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, usecases, builders },
+  }));
+}
+
+const { entry, usecases, builders } = Astro.props;
+const u = entry.data;
+
+const de = (n: number) => n.toFixed(1).replace(".", ",");
+const starsFor = (score: number) => {
+  const full = Math.round(score);
+  return "★★★★★".slice(0, full) + "☆☆☆☆☆".slice(full);
+};
+
+const builderBySlug = (slug: string) =>
+  builders.find((b) => b.data.slug === slug || b.id === slug);
+
+// topBuilders join mit builders-Collection für Score/Preis/Logo
+const recos = u.topBuilders
+  .map((tb) => {
+    const b = builderBySlug(tb.builderSlug);
+    return b ? { why: tb.why, b: b.data } : null;
+  })
+  .filter((r): r is { why: string[]; b: (typeof builders)[number]["data"] } => r !== null);
+
+const winner = recos[0];
+
+// Verwandte Anwendungsfälle (andere usecases)
+const related = usecases
+  .filter((x) => x.id !== entry.id)
+  .slice(0, 4);
+
+const pageTitle = `${u.title} - HomepageTooltester`;
+const pageDesc = u.lede;
+---
+
+<BaseLayout title={pageTitle} description={pageDesc}>
+  <!-- HERO -->
+  <div class="uhero">
+    <div class="wrap">
+      <div class="crumb">
+        <a href="/">Home</a> › <a href="/anwendungsfall/restaurant">Anwendungsfall</a> ›
+        <span>{u.heroHighlight}</span>
+      </div>
+      <span class="badge badge-gold">★ Aktualisiert Juni 2026</span>
+      <h1>
+        {u.title.split(u.heroHighlight)[0]}<span class="hl">{u.heroHighlight}</span
+        >{u.title.split(u.heroHighlight)[1] ?? ""}
+      </h1>
+      <p class="lede">{u.lede}</p>
+      <div class="meta">
+        <span><b>{builders.length}</b> Tools geprüft</span>
+        <span>
+          Kriterien: <b>{u.requirements.slice(0, 3).map((r) => r.title).join(", ")}</b>
+        </span>
+        <span>Stand: <b>Juni 2026</b></span>
+      </div>
+
+      {
+        winner && (
+          <div class="winnerstrip">
+            <div class="lg" style={`background:${winner.b.color}`}>
+              {winner.b.logoText}
+            </div>
+            <div class="info">
+              <div class="top">
+                <span class="nm">{winner.b.name}</span>
+                <span class="badge badge-gold">
+                  Empfehlung für {u.heroHighlight}
+                </span>
+              </div>
+              <p>{winner.why[0]}</p>
+            </div>
+            <div class="sc">
+              <div class="v">{de(winner.b.scoreOverall)}</div>
+              <div class="stars">{starsFor(winner.b.scoreOverall)}</div>
+            </div>
+            <a href={getAffiliateUrl(winner.b.slug).url} target="_blank" rel="sponsored nofollow" class="btn btn-primary">
+              Zu {winner.b.name} →
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- REQUIREMENTS -->
+  <section>
+    <div class="wrap">
+      <div class="sechead">
+        <span class="eyebrow">Worauf es ankommt</span>
+        <h2>Das braucht eine gute {u.heroHighlight}-Website</h2>
+        <p>
+          Bevor du einen Baukasten wählst, sollte er diese spezifischen
+          Anforderungen erfüllen.
+        </p>
+      </div>
+      <div class="reqgrid">
+        {
+          u.requirements.map((r) => (
+            <div class="req">
+              <div class="ic">{r.icon}</div>
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMMENDATIONS -->
+  <section style="background:var(--color-pewter)">
+    <div class="wrap">
+      <div class="sechead">
+        <span class="eyebrow">Unsere Top 3 für {u.heroHighlight}</span>
+        <h2>Die besten Baukästen für {u.heroHighlight}</h2>
+        <p>
+          Aus {builders.length} getesteten Tools - bewertet speziell nach den
+          Anforderungen oben.
+        </p>
+      </div>
+      <div class="recos">
+        {
+          recos.map((r, i) => (
+            <div class={`reco${i === 0 ? " top" : ""}`}>
+              {i === 0 && (
+                <div class="ribbon">★ Beste Wahl für {u.heroHighlight}</div>
+              )}
+              <div class="rhead">
+                <div class="lg" style={`background:${r.b.color}`}>
+                  {r.b.logoText}
+                </div>
+                <div>
+                  <div class="nm">{r.b.name}</div>
+                  <div class="ws">{r.b.priceFrom}{r.b.priceNote}</div>
+                </div>
+                <div class="sc">
+                  <span class="v">{de(r.b.scoreOverall)}</span>
+                  <span class="stars">{starsFor(r.b.scoreOverall)}</span>
+                </div>
+              </div>
+              <div class="body">
+                <div class="label">Warum gut für {u.heroHighlight}</div>
+                <ul>
+                  {r.why.map((w) => (
+                    <li>{w}</li>
+                  ))}
+                </ul>
+              </div>
+              <div class="foot">
+                <a href={getAffiliateUrl(r.b.slug).url} target="_blank" rel="sponsored nofollow" class="btn btn-primary btn-sm">
+                  Zu {r.b.name}
+                </a>
+                <a href={`/test/${r.b.slug}`} class="btn btn-outline btn-sm">
+                  Testbericht
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <div style="text-align:center;margin-top:26px">
+        <a href="/baukasten-vergleich" class="btn btn-ghost">
+          Alle Baukästen in der Vergleichstabelle →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS -->
+  <section>
+    <div class="wrap">
+      <div class="sechead">
+        <span class="eyebrow">Schritt für Schritt</span>
+        <h2>So baust du deine {u.heroHighlight}-Website</h2>
+      </div>
+      <div class="steps">
+        {
+          u.steps.map((s) => (
+            <div class="step">
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section class="showcase">
+    <div class="wrap">
+      <div class="grid">
+        <div>
+          <img
+            src={u.image.url}
+            alt={`Praxisbeispiel: ${u.heroHighlight}-Website`}
+            width="1200"
+            height="630"
+            loading="lazy"
+            style="width:100%;height:320px;object-fit:cover;border-radius:var(--radius-card);box-shadow:var(--shadow-card)"
+          />
+          <p class="muted" style="font-size:11px;margin-top:8px">
+            <a href={u.image.creditUrl} rel="nofollow">{u.image.credit}</a>
+          </p>
+        </div>
+        <div>
+          <span class="eyebrow">Praxisbeispiel</span>
+          <h2 style="margin:10px 0 14px">So sieht das Ergebnis aus</h2>
+          <p class="muted">
+            Für unseren Test haben wir mit jedem Baukasten eine echte
+            Beispiel-Website gebaut.{winner && ` ${winner.b.name} lieferte die rundeste Lösung.`}
+          </p>
+          <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+            {
+              winner && (
+                <a href={getAffiliateUrl(winner.b.slug).url} target="_blank" rel="sponsored nofollow" class="btn btn-primary">
+                  Selbst ausprobieren
+                </a>
+              )
+            }
+            <a href="/baukasten-finder" class="btn btn-outline">
+              Passenden Baukasten finden
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="wrap">
+      <div class="sechead">
+        <span class="eyebrow">Häufige Fragen</span>
+        <h2 style="margin:10px 0 22px">{u.heroHighlight}-Website FAQ</h2>
+      </div>
+      <div class="faq-wrap">
+        {
+          u.faq.map((f, i) => (
+            <details class="faq" open={i === 0}>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- RELATED -->
+  {
+    related.length > 0 && (
+      <section style="background:var(--color-pewter)">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="eyebrow">Weitere Anwendungsfälle</span>
+            <h2 style="margin:10px 0 0">Baukasten für andere Branchen</h2>
+          </div>
+          <div class="related">
+            {related.map((rel) => (
+              <a href={`/anwendungsfall/${rel.id}`} class="rel">
+                <div class="ic">{rel.data.accentEmoji}</div>
+                <div class="nm">{rel.data.heroHighlight}</div>
+                <span class="lk">Empfehlung →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Affiliate-Disclaimer -->
+  <div class="wrap">
+    <p class="disclaimer" style="margin:30px auto 50px">
+      Transparenz-Hinweis: Einige Links auf dieser Seite sind Affiliate-Links.
+      Schließt du über einen solchen Link einen Vertrag ab, erhalten wir eine
+      Provision. Für dich entstehen keine zusätzlichen Kosten. Diese Finanzierung
+      hat keinen Einfluss auf unsere Testergebnisse und Platzierungen.
+    </p>
+  </div>
+</BaseLayout>

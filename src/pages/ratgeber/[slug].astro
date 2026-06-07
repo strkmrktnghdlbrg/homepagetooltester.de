@@ -1,0 +1,163 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("articles");
+  return articles.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, articles },
+  }));
+}
+
+const { entry, articles } = Astro.props;
+const a = entry.data;
+const { Content } = await render(entry);
+
+// Deutsches Datum
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("de-DE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+// Initialen für Autoren-Avatar (E-E-A-T)
+const initials = a.author
+  .split(" ")
+  .map((w) => w[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+const authorRole = "Redakteur Website-Tools";
+const authorBio =
+  a.author +
+  " testet seit über acht Jahren Homepage-Baukästen und hat dabei mehr als 40 Tools praktisch geprüft. In seinen Ratgebern übersetzt er Fachthemen in verständliche Entscheidungshilfen - ohne Marketing-Floskeln.";
+
+// Verwandte Artikel: gleiche Kategorie zuerst, dann auffüllen, max. 4
+const others = articles.filter((x) => x.id !== entry.id);
+const sameCat = others.filter((x) => x.data.category === a.category);
+const restCat = others.filter((x) => x.data.category !== a.category);
+const related = [...sameCat, ...restCat].slice(0, 4);
+
+const pageDesc = a.excerpt;
+---
+
+<BaseLayout title={`${a.title} - HomepageTooltester`} description={pageDesc}>
+  <div class="wrap">
+    <div class="crumb">
+      <a href="/">Home</a> › <a href="/ratgeber">Ratgeber</a> ›
+      <span>{a.category}</span>
+    </div>
+
+    <div class="layout">
+      <!-- MAIN -->
+      <div class="content">
+        <span class="badge badge-violet">{a.category}</span>
+        <h1>{a.title}</h1>
+        <p class="lede">{a.excerpt}</p>
+        <div class="byline">
+          <span class="av">{initials}</span>
+          <span>
+            Von <b>{a.author}</b> · {fmtDate(a.date)} · {a.readingTime} Lesezeit
+          </span>
+        </div>
+
+        <!-- HERO-BILD -->
+        <figure style="margin:26px 0 6px">
+          <img
+            src={a.image.url}
+            alt={a.title}
+            width="1200"
+            height="630"
+            loading="eager"
+            style="border-radius:var(--radius-card);box-shadow:var(--shadow-card);width:100%;max-width:680px"
+          />
+          <figcaption
+            class="muted"
+            style="font-size:12px;margin-top:8px;max-width:680px"
+          >
+            <a href={a.image.creditUrl} rel="nofollow" style="color:var(--color-violet)"
+              >{a.image.credit}</a
+            >
+          </figcaption>
+        </figure>
+
+        <!-- PROSE (Markdown-Body) -->
+        <div class="prose">
+          <Content />
+        </div>
+
+        <!-- AUTHOR E-E-A-T -->
+        <div class="authorbox">
+          <span class="av">{initials}</span>
+          <div>
+            <span class="nm">{a.author}</span> · <span class="rl">{authorRole}</span>
+            <p>{authorBio}</p>
+          </div>
+        </div>
+
+        <!-- Affiliate-Hinweis -->
+        <p class="disclaimer" style="color:var(--color-slate-text);max-width:680px">
+          Transparenz-Hinweis: Dieser Ratgeber kann Affiliate-Links enthalten.
+          Schließt du über einen solchen Link einen Vertrag ab, erhalten wir eine
+          Provision. Für dich entstehen keine zusätzlichen Kosten. Das hat keinen
+          Einfluss auf unsere Inhalte und Bewertungen.
+        </p>
+      </div>
+
+      <!-- ASIDE -->
+      <aside class="aside">
+        <div class="toc">
+          <h4>Schnellzugriff</h4>
+          <a href="/baukasten-vergleich">→ Baukasten-Vergleich</a>
+          <a href="/baukasten-finder">→ Baukasten-Finder</a>
+          <a href="/ratgeber">→ Alle Ratgeber</a>
+          <a href="/ueber-uns">→ So testen wir</a>
+        </div>
+
+        <div class="verdict" style="margin-top:18px">
+          <h3 style="font-size:17px;margin-bottom:8px">Noch unentschlossen?</h3>
+          <p class="muted" style="font-size:14px;margin:0 0 14px">
+            Unser interaktiver Finder schlägt dir in wenigen Klicks den passenden
+            Baukasten vor.
+          </p>
+          <a
+            href="/baukasten-finder"
+            class="btn btn-primary btn-sm"
+            style="width:100%">Finder starten →</a
+          >
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- VERWANDTE ARTIKEL -->
+  {
+    related.length > 0 && (
+      <div class="alts">
+        <div class="wrap">
+          <span class="eyebrow">Weiterlesen</span>
+          <h2 style="margin:10px 0 0">Verwandte Ratgeber</h2>
+          <div class="blog-grid" style="margin-top:24px">
+            {related.map((r) => (
+              <a class="post" href={`/ratgeber/${r.data.slug}`}>
+                <div
+                  class="thumb"
+                  style={`background-image:url('${r.data.image.url}')`}
+                />
+                <div class="body">
+                  <span class="cat">{r.data.category}</span>
+                  <h3>{r.data.title}</h3>
+                  <div class="meta">
+                    {r.data.readingTime} Lesezeit · {r.data.author}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+</BaseLayout>

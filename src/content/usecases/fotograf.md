@@ -1,0 +1,67 @@
+---
+title: "Bester Homepage-Baukasten für Fotografen 2026"
+slug: "fotograf"
+accentEmoji: "📸"
+heroHighlight: "Fotografen"
+lede: "Portfolio, Bildgalerien in voller Auflösung, Bildschutz und ein Kontaktformular für Anfragen - wir haben getestet, mit welchem Baukasten Fotografen ihre Arbeit am besten in Szene setzen."
+requirements:
+  - icon: "🖼️"
+    title: "Portfolio-Galerien"
+    text: "Große, hochauflösende Bilder ohne Qualitätsverlust und mit Lightbox."
+  - icon: "🎨"
+    title: "Minimalistische Designs"
+    text: "Vorlagen, die das Bild in den Mittelpunkt stellen und nicht ablenken."
+  - icon: "⚡"
+    title: "Schnelle Ladezeiten"
+    text: "Automatische Bildkomprimierung, damit große Galerien flott laden."
+  - icon: "🔒"
+    title: "Bildschutz"
+    text: "Rechtsklick-Sperre oder Wasserzeichen gegen ungewolltes Kopieren."
+  - icon: "✉️"
+    title: "Anfrage-Formular"
+    text: "Kontaktformular für Buchungen von Hochzeiten, Shootings und Events."
+  - icon: "🛒"
+    title: "Bildverkauf optional"
+    text: "Prints oder Downloads direkt über die Seite verkaufen können."
+topBuilders:
+  - builderSlug: "squarespace"
+    why:
+      - "Preisgekrönte, bildzentrierte Vorlagen"
+      - "Galerie-Blöcke mit Lightbox und Rastern"
+      - "Integrierter Shop für Prints und Downloads"
+      - "Hochwertige Typografie ab Werk"
+  - builderSlug: "wix"
+    why:
+      - "Wix Pro Gallery mit Bildschutz"
+      - "Riesige Auswahl an Fotografie-Vorlagen"
+      - "Automatische Bildoptimierung"
+      - "Anfrage- und Buchungsformulare integrierbar"
+  - builderSlug: "jimdo"
+    why:
+      - "Server in Deutschland (DSGVO)"
+      - "Sehr schneller, einfacher Einstieg"
+      - "Saubere Galerie-Darstellung"
+      - "Günstig für reine Portfolio-Seiten"
+steps:
+  - title: "Baukasten wählen"
+    text: "Starte mit Squarespace für maximale Bildwirkung oder nutze den Finder für deinen Stil."
+  - title: "Portfolio-Vorlage anpassen"
+    text: "Wähle eine bildzentrierte Vorlage und passe Logo, Schriften und Farben an."
+  - title: "Galerien füllen"
+    text: "Lade deine besten Arbeiten hoch, sortiere nach Kategorien und richte den Bildschutz ein."
+  - title: "Online gehen"
+    text: "Anfrage-Formular ergänzen, eigene Domain verbinden, fertig."
+faq:
+  - q: "Welcher Baukasten ist am besten für Fotografen?"
+    a: "Squarespace gilt für viele Fotografen als erste Wahl, weil die Vorlagen das Bild kompromisslos in den Mittelpunkt stellen. Wer mehr Funktionen und Bildschutz möchte, ist mit Wix gut beraten."
+  - q: "Werden meine Bilder durch die Komprimierung schlechter?"
+    a: "Die Baukästen optimieren Bilder fürs Web, damit Galerien schnell laden. Für die Bildschirmdarstellung bleibt die Qualität sehr gut. Originaldateien in voller Auflösung solltest du separat sichern."
+  - q: "Kann ich Prints oder Downloads über meine Seite verkaufen?"
+    a: "Ja. Squarespace und Wix bringen Shop-Funktionen mit, über die du physische Prints oder digitale Downloads direkt verkaufen kannst."
+image:
+  url: "/images/content/fotograf.webp"
+  credit: "Bild: KI-generiert · HomepageTooltester"
+  creditUrl: "/ueber-uns"
+---
+
+Für unseren Test haben wir mit jedem Baukasten eine echte Portfolio-Galerie mit hochauflösenden Bildern und ein Anfrage-Formular gebaut. Squarespace überzeugte mit der ruhigsten, bildzentriertesten Darstellung. Wix punktete mit der Pro Gallery und dem integrierten Bildschutz.

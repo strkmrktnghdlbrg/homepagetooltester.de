@@ -1,0 +1,77 @@
+---
+import { getAffiliateUrl } from "../lib/affiliate";
+interface Scores {
+  bedienung: number;
+  design: number;
+  funktionen: number;
+  seo: number;
+  preis: number;
+  support: number;
+}
+interface Builder {
+  name: string;
+  logoText: string;
+  color: string;
+  award?: string;
+  scoreOverall: number;
+  scores: Scores;
+  priceFrom: string;
+  priceNote: string;
+  websiteLabel: string;
+  affiliateUrl: string;
+  slug: string;
+}
+interface Props {
+  builder: Builder;
+}
+const { builder } = Astro.props;
+
+const de = (n: number) => n.toFixed(1).replace(".", ",");
+const pct = (n: number) => Math.round((n / 5) * 100);
+
+const full = Math.round(builder.scoreOverall);
+const bigStars = "★★★★★".slice(0, full) + "★★★★★".slice(full);
+
+const rows: { label: string; value: number }[] = [
+  { label: "Bedienung", value: builder.scores.bedienung },
+  { label: "Design", value: builder.scores.design },
+  { label: "Funktionen", value: builder.scores.funktionen },
+  { label: "SEO", value: builder.scores.seo },
+  { label: "Preis-Leistung", value: builder.scores.preis },
+  { label: "Support", value: builder.scores.support },
+];
+---
+<div class="scorecard">
+  <div class="top">
+    <div class="rel">
+      <div class="toollogo" style={`background:${builder.color}`}>{builder.logoText}</div>
+      <div class="tname">{builder.name}</div>
+      {builder.award && (
+        <div class="award"><span class="badge badge-gold">★ {builder.award}</span></div>
+      )}
+      <div class="bigscore">{de(builder.scoreOverall)}<small>/5</small></div>
+      <div class="bigstars">
+        {bigStars.split("").map((c, i) =>
+          i < full ? <span>★</span> : <span class="e">★</span>
+        )}
+      </div>
+    </div>
+  </div>
+  <div class="mid">
+    {rows.map((r) => (
+      <div class="subscore">
+        <div class="row"><span>{r.label}</span><span class="val">{de(r.value)}</span></div>
+        <div class="track"><i style={`width:${pct(r.value)}%`}></i></div>
+      </div>
+    ))}
+  </div>
+  <div class="bottom">
+    <div class="price">
+      <span class="p">ab {builder.priceFrom}</span> <span class="s">{builder.priceNote}</span>
+    </div>
+    <a href={getAffiliateUrl(builder.slug).url} target="_blank" class="btn btn-primary" rel="sponsored nofollow">
+      Zu {builder.name} →
+    </a>
+    <div class="trust">🔒 Affiliate-Link · ohne Mehrkosten für dich</div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+# 301-Redirects (Netlify-/Host-Format) - alte WP-Pfade -> neue Astro-Cluster.
+# Annahmen-basiert, siehe REDIRECTS.md. Trailing-Slash-Varianten zusaetzlich abgedeckt.
+
+# Vergleich / Money-Page
+/homepage-baukasten            /baukasten-vergleich              301
+/homepage-baukasten-vergleich  /baukasten-vergleich              301
+/vergleiche                    /baukasten-vergleich              301
+/alternativen                  /baukasten-vergleich              301
+/funktionen                    /baukasten-vergleich              301
+
+# Tool-Reviews
+/wix          /test/wix          301
+/jimdo        /test/jimdo        301
+/ionos        /test/ionos        301
+/squarespace  /test/squarespace  301
+/shopify      /test/shopify      301
+/site123      /test/site123      301
+/onepage      /test/onepage      301
+
+# Branche / Anwendungsfall
+/branche      /anwendungsfall/restaurant     301
+/e-commerce   /anwendungsfall/online-shop    301
+/online-shop  /anwendungsfall/online-shop    301
+
+# Ratgeber-Cluster
+/einsteiger   /ratgeber                              301
+/kosten       /ratgeber/website-kosten               301
+/seo          /ratgeber/seo-fuer-website-baukasten   301
+/pagespeed    /ratgeber                              301
+
+# Tools / Sonstiges
+/finder            /baukasten-finder   301
+/kontakt-impressum /kontakt            301
+
+# WP-Recovery 2026: echte indexierte Alt-URLs (via site:-Inventur)
+/homepage-baukasten-test-2025              /baukasten-vergleich                      301
+/homepage-builder-fuer-anfaenger           /ratgeber/homepage-baukasten-fuer-anfaenger  301
+/webseite-erstellen                        /ratgeber/website-erstellen-anleitung     301
+/homepage-builder-onlinekurse              /baukasten-vergleich                      301
+/homepage-builder-ecommerce-vergleich      /ratgeber/online-shop-erstellen           301
+/kostenlose-homepage-builder               /ratgeber/kostenlose-homepage-baukasten   301
+/kostenlose-website-baukasten-ohne-werbung /ratgeber/kostenlose-homepage-baukasten   301
+/webseite-erstellen-lassen                 /baukasten-vergleich                      301

@@ -1,0 +1,96 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+// Suchindex aus allen Inhalten zur Build-Zeit erzeugen
+const builders = await getCollection("builders");
+const usecases = await getCollection("usecases");
+const articles = await getCollection("articles");
+
+type IndexItem = { title: string; url: string; type: string; snippet: string };
+
+const index: IndexItem[] = [
+  ...builders.map((b) => ({
+    title: `${b.data.name} Test`,
+    url: `/test/${b.data.slug}`,
+    type: "Testbericht",
+    snippet: `${b.data.tagline} - ${b.data.bestFor}. Gesamt-Score ${b.data.scoreOverall.toFixed(1).replace(".", ",")}/5.`,
+  })),
+  ...usecases.map((u) => ({
+    title: u.data.title,
+    url: `/anwendungsfall/${u.data.slug}`,
+    type: "Anwendungsfall",
+    snippet: u.data.lede,
+  })),
+  ...articles.map((a) => ({
+    title: a.data.title,
+    url: `/ratgeber/${a.data.slug}`,
+    type: "Ratgeber",
+    snippet: a.data.excerpt,
+  })),
+  { title: "Baukasten-Vergleich 2026", url: "/baukasten-vergleich", type: "Vergleich", snippet: "Alle getesteten Homepage-Baukästen in der großen Vergleichstabelle." },
+  { title: "Baukasten-Finder", url: "/baukasten-finder", type: "Tool", snippet: "In 6 Fragen zum passenden Baukasten." },
+];
+---
+
+<BaseLayout
+  title="Suche | HomepageTooltester"
+  description="Durchsuche Testberichte, Vergleiche, Anwendungsfälle und Ratgeber von HomepageTooltester."
+>
+  <section>
+    <div class="wrap" style="max-width:820px">
+      <span class="eyebrow">Suche</span>
+      <h1 style="font-size:40px;margin:10px 0 18px">Was suchst du?</h1>
+      <input
+        id="q"
+        type="search"
+        placeholder="Tool, Branche oder Stichwort eingeben ..."
+        autocomplete="off"
+        style="width:100%;padding:15px 18px;border:1px solid #e2e2ec;border-radius:var(--radius-btn);font-family:inherit;font-size:17px"
+      />
+      <p id="meta" class="muted" style="font-size:13px;margin-top:10px"></p>
+      <div id="results" style="margin-top:18px;display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ index }}>
+    const input = document.getElementById("q");
+    const results = document.getElementById("results");
+    const meta = document.getElementById("meta");
+
+    function render(q) {
+      const term = q.trim().toLowerCase();
+      let list = index;
+      if (term) {
+        list = index.filter(
+          (i) =>
+            i.title.toLowerCase().includes(term) ||
+            i.snippet.toLowerCase().includes(term) ||
+            i.type.toLowerCase().includes(term),
+        );
+      }
+      meta.textContent = term
+        ? `${list.length} Treffer für "${q.trim()}"`
+        : `${index.length} Inhalte durchsuchbar`;
+      results.innerHTML = list
+        .map(
+          (i) =>
+            `<a href="${i.url}" style="display:block;background:#fff;border:1px solid #ececf2;border-radius:var(--radius-card);padding:18px 20px;text-decoration:none;color:inherit">
+              <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--color-violet)">${i.type}</span>
+              <div style="font-weight:900;font-size:17px;margin:4px 0 4px">${i.title}</div>
+              <div style="color:var(--color-slate-text);font-size:14px">${i.snippet}</div>
+            </a>`,
+        )
+        .join("");
+      if (!list.length) {
+        results.innerHTML = `<p class="muted">Keine Treffer. Versuche es mit einem anderen Begriff oder sieh dir den <a href="/baukasten-vergleich" style="color:var(--color-violet);font-weight:700">Vergleich</a> an.</p>`;
+      }
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const initial = params.get("q") || "";
+    input.value = initial;
+    render(initial);
+    input.addEventListener("input", (e) => render(e.target.value));
+  </script>
+</BaseLayout>

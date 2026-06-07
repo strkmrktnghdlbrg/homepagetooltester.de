@@ -1,0 +1,67 @@
+---
+title: "Bester Homepage-Baukasten für Online-Shops 2026"
+slug: "online-shop"
+accentEmoji: "🛒"
+heroHighlight: "Online-Shops"
+lede: "Produktverwaltung, Zahlungsarten, Versand und Warenkorb - wir haben getestet, mit welchem Baukasten du am schnellsten einen verkaufsstarken Online-Shop aufsetzt."
+requirements:
+  - icon: "📦"
+    title: "Produktverwaltung"
+    text: "Varianten, Lagerbestände und Kategorien übersichtlich pflegen können."
+  - icon: "💳"
+    title: "Zahlungsarten"
+    text: "PayPal, Kreditkarte, Klarna und Co. ohne großen Aufwand anbinden."
+  - icon: "🚚"
+    title: "Versand und Steuern"
+    text: "Versandregeln, Zonen und Mehrwertsteuer korrekt einstellen."
+  - icon: "🛍️"
+    title: "Warenkorb und Checkout"
+    text: "Reibungsloser Bestellprozess, der Kaufabbrüche vermeidet."
+  - icon: "📊"
+    title: "Verkaufs-Tracking"
+    text: "Bestellungen, Umsätze und Bestseller im Blick behalten."
+  - icon: "📱"
+    title: "Mobiler Checkout"
+    text: "Über die Hälfte der Käufe passiert am Handy - der Checkout muss mobil sitzen."
+topBuilders:
+  - builderSlug: "shopify"
+    why:
+      - "Spezialist rein für E-Commerce"
+      - "Stärkstes Checkout- und Zahlungs-System"
+      - "Skaliert vom Einsteiger bis zum großen Shop"
+      - "Riesiges App-Ökosystem für Versand und Marketing"
+  - builderSlug: "wix"
+    why:
+      - "Shop plus klassische Website aus einer Hand"
+      - "Viele Zahlungsarten ab Werk"
+      - "Gut für kleine bis mittlere Sortimente"
+      - "Komfortabler Editor ohne Technik-Wissen"
+  - builderSlug: "ionos"
+    why:
+      - "Server und Support in Deutschland"
+      - "Günstige Shop-Tarife"
+      - "Solide Basis-Funktionen für den Start"
+      - "DSGVO-konform aus deutscher Hand"
+steps:
+  - title: "Baukasten wählen"
+    text: "Starte mit Shopify für reinen Verkauf oder nutze den Finder für dein Sortiment."
+  - title: "Shop-Vorlage anpassen"
+    text: "Wähle eine Shop-Vorlage und passe Logo, Farben und Startseite an."
+  - title: "Produkte und Zahlung einrichten"
+    text: "Produkte mit Bildern anlegen, Zahlungsarten verbinden und Versandregeln festlegen."
+  - title: "Online gehen"
+    text: "Testbestellung durchführen, eigene Domain verbinden, fertig."
+faq:
+  - q: "Welcher Baukasten eignet sich am besten für einen Online-Shop?"
+    a: "Für einen reinen Verkaufsfokus ist Shopify die stärkste Wahl, weil der gesamte Baukasten auf E-Commerce ausgelegt ist. Wer Shop und normale Website kombinieren möchte, fährt mit Wix gut. IONOS ist günstig und deutsch."
+  - q: "Welche Zahlungsarten kann ich anbieten?"
+    a: "Bei allen empfohlenen Baukästen lassen sich gängige Zahlungsarten wie PayPal, Kreditkarte und je nach Anbieter auch Klarna oder Apple Pay einrichten. Shopify bietet hier die breiteste Auswahl."
+  - q: "Was kostet ein Online-Shop pro Monat?"
+    a: "Shop-Tarife starten je nach Anbieter ab rund 20 bis 30 € pro Monat. Dazu können Transaktionsgebühren und Kosten für zusätzliche Apps kommen. Für kleine Sortimente gibt es teils günstigere Einsteiger-Tarife."
+image:
+  url: "/images/content/online-shop.webp"
+  credit: "Bild: KI-generiert · HomepageTooltester"
+  creditUrl: "/ueber-uns"
+---
+
+Für unseren Test haben wir mit jedem Baukasten einen echten Beispiel-Shop mit Produkten, Zahlungsarten und Versandregeln aufgesetzt und eine Testbestellung durchgeführt. Shopify lieferte den reibungslosesten Checkout und die meisten Verkaufs-Funktionen. Wix überzeugte als Allrounder für alle, die Shop und Website verbinden wollen.

@@ -1,0 +1,67 @@
+---
+title: "Bester Homepage-Baukasten für Handwerker 2026"
+slug: "handwerker"
+accentEmoji: "🔧"
+heroHighlight: "Handwerker"
+lede: "Leistungen, Referenzen, Anfrage-Formular und lokale Sichtbarkeit - wir haben getestet, mit welchem Baukasten Handwerksbetriebe schnell und seriös online gehen."
+requirements:
+  - icon: "🛠️"
+    title: "Leistungsübersicht"
+    text: "Gewerke und Angebote klar strukturiert für Kunden darstellen."
+  - icon: "🏗️"
+    title: "Referenz-Galerie"
+    text: "Abgeschlossene Projekte mit Vorher-Nachher-Bildern zeigen."
+  - icon: "📞"
+    title: "Anfrage und Kontakt"
+    text: "Kontaktformular, Telefon-Button und Rückruf-Option direkt sichtbar."
+  - icon: "📍"
+    title: "Lokales SEO"
+    text: "Gefunden werden bei Gewerk plus Ort - inkl. Google-Business-Anbindung."
+  - icon: "📱"
+    title: "Mobile First"
+    text: "Kunden suchen unterwegs am Handy - die Seite muss mobil überzeugen."
+  - icon: "🇩🇪"
+    title: "DSGVO und deutsche Server"
+    text: "Rechtssicherheit und Datenschutz nach deutschen Standards."
+topBuilders:
+  - builderSlug: "jimdo"
+    why:
+      - "Server in Deutschland (DSGVO)"
+      - "In Minuten startklar, sehr einfach"
+      - "Gute lokale SEO-Tools"
+      - "Ideal für die schlanke Visitenkarten-Seite"
+  - builderSlug: "ionos"
+    why:
+      - "Support und Server in Deutschland"
+      - "Günstige Tarife für kleine Betriebe"
+      - "Rankingcoach für lokales SEO"
+      - "Eigene Domain und Mail inklusive"
+  - builderSlug: "wix"
+    why:
+      - "Anfrage- und Termin-Funktionen integrierbar"
+      - "Große Auswahl an Business-Vorlagen"
+      - "Top mobile Darstellung"
+      - "Referenz-Galerien einfach zu pflegen"
+steps:
+  - title: "Baukasten wählen"
+    text: "Starte mit Jimdo für den schnellen, deutschen Einstieg oder nutze den Finder für deinen Betrieb."
+  - title: "Business-Vorlage anpassen"
+    text: "Wähle eine Handwerker-Vorlage und tausche Logo, Farben und Firmenbilder."
+  - title: "Leistungen und Referenzen"
+    text: "Gewerke beschreiben, Projektfotos hochladen und das Anfrage-Formular einrichten."
+  - title: "Online gehen"
+    text: "Bei Google Business eintragen, eigene Domain verbinden, fertig."
+faq:
+  - q: "Welcher Baukasten ist am besten für Handwerker?"
+    a: "Für eine schnelle, rechtssichere Seite aus deutscher Hand ist Jimdo eine gute Wahl. IONOS ist besonders günstig und ebenfalls deutsch. Wer mehr Funktionen wie Online-Terminbuchung möchte, greift zu Wix."
+  - q: "Wie werde ich bei Google in meiner Region gefunden?"
+    a: "Wichtig sind ein vollständiges Google-Business-Profil, klare Angaben zu Gewerk und Ort sowie echte Referenzen. Jimdo und IONOS bringen lokale SEO-Hilfen mit, die dich Schritt für Schritt anleiten."
+  - q: "Brauche ich für Anfragen ein extra Tool?"
+    a: "Nein. Ein Kontaktformular und ein Telefon-Button reichen für die meisten Handwerksbetriebe. Bei Wix lässt sich zusätzlich eine Online-Terminbuchung einbinden."
+image:
+  url: "/images/content/handwerker.webp"
+  credit: "Bild: KI-generiert · HomepageTooltester"
+  creditUrl: "/ueber-uns"
+---
+
+Für unseren Test haben wir mit jedem Baukasten eine echte Handwerker-Seite mit Leistungsübersicht, Referenz-Galerie und Anfrage-Formular gebaut. Jimdo überzeugte mit dem schnellsten Start und deutschen Servern. IONOS punktete beim Preis und beim lokalen SEO, Wix bei den Zusatzfunktionen wie der Online-Terminbuchung.

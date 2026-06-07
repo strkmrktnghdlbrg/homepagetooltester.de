@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const criteria = [
+  { n: "01", t: "Bedienung & Editor", d: "Wie schnell und intuitiv entsteht eine Seite? Wir bauen mit jedem Tool eine echte Test-Website." },
+  { n: "02", t: "Design & Vorlagen", d: "Auswahl, Qualität und Anpassbarkeit der Templates auf Desktop und Mobil." },
+  { n: "03", t: "Funktionsumfang", d: "Shop, Blog, Buchung, Mehrsprachigkeit, App-Markt und Erweiterbarkeit." },
+  { n: "04", t: "SEO & Marketing", d: "Saubere Technik, Ladezeiten, Meta-Steuerung und Marketing-Integrationen." },
+  { n: "05", t: "Preis-Leistung", d: "Tarife, versteckte Kosten und was man fürs Geld wirklich bekommt." },
+  { n: "06", t: "Support & Hilfe", d: "Erreichbarkeit, Sprache und Qualität von Hilfe-Center und Kundendienst." },
+];
+---
+
+<BaseLayout
+  title="Über uns - So testen wir | HomepageTooltester"
+  description="Wie HomepageTooltester Homepage-Baukästen unabhängig nach 6 Kriterien testet - und wie wir uns finanzieren."
+>
+  <div class="uhero" style="background:var(--gradient-midnight-ink);color:#fff;padding:48px 0 56px">
+    <div class="wrap">
+      <span class="eyebrow" style="color:var(--color-sunshine)">Über uns</span>
+      <h1 style="color:#fff;font-size:46px;max-width:760px;margin:12px 0 14px">
+        Unabhängige Baukasten-Tests seit 2014.
+      </h1>
+      <p style="color:#c4c4e0;font-size:18px;max-width:640px">
+        Wir helfen dir, den richtigen Homepage-Baukasten zu finden - mit echten Tests
+        nach festen Kriterien statt Werbeversprechen.
+      </p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head" style="text-align:left;margin-bottom:30px">
+        <span class="eyebrow">Methodik</span>
+        <h2>So testen wir</h2>
+        <p>Jeder Baukasten durchläuft denselben Test. Wir bauen damit eine vollständige Website und bewerten 6 Kriterien nach einem festen Punkteschema. Der Gesamt-Score ist der gewichtete Durchschnitt.</p>
+      </div>
+      <div class="usecase-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        {criteria.map((c) => (
+          <div class="req" style="background:#fff;border:1px solid #ececf2;border-radius:var(--radius-card);padding:22px">
+            <div class="eyebrow" style="color:var(--color-iris)">{c.n}</div>
+            <h3 style="font-size:17px;margin:6px 0 6px">{c.t}</h3>
+            <p class="muted" style="font-size:14px">{c.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--color-pewter)">
+    <div class="wrap" style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center">
+      <div>
+        <span class="eyebrow">Das Team</span>
+        <h2 style="margin:10px 0 14px">Mensch statt Tabelle</h2>
+        <p class="muted">Hinter den Tests stehen echte Redakteurinnen und Redakteure, die seit Jahren Website-Baukästen praktisch nutzen - nicht nur Datenblätter vergleichen.</p>
+        <div style="display:flex;gap:14px;align-items:center;margin-top:22px;background:#fff;border-radius:var(--radius-card);padding:18px">
+          <span style="width:54px;height:54px;border-radius:50%;background:var(--gradient-midnight-ink);display:grid;place-items:center;color:var(--color-sunshine);font-weight:900">MK</span>
+          <div>
+            <div style="font-weight:900">Mason Kuhn</div>
+            <div style="color:var(--color-violet);font-weight:700;font-size:13px">Redakteur Website-Tools</div>
+            <p class="muted" style="font-size:13px;margin-top:4px">Testet seit über 8 Jahren Homepage-Baukästen und hat über 40 Tools praktisch geprüft.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow">Transparenz</span>
+        <h2 style="margin:10px 0 14px">Wie wir uns finanzieren</h2>
+        <p class="muted">Einige Links auf dieser Seite sind Affiliate-Links. Schließt du über einen solchen Link einen Vertrag ab, erhalten wir eine Provision - ohne Mehrkosten für dich. Diese Finanzierung hat <strong>keinen Einfluss</strong> auf unsere Bewertungen oder Platzierungen. Die Reihenfolge im Ranking ergibt sich ausschließlich aus dem Gesamt-Score.</p>
+        <a href="/baukasten-vergleich" class="btn btn-primary" style="margin-top:18px">Zum Vergleich 2026</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

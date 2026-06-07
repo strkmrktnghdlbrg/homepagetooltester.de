@@ -1,0 +1,209 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getAffiliateUrl } from "../lib/affiliate";
+import BuilderLogo from "../components/BuilderLogo.astro";
+
+const builders = (await getCollection("builders")).sort(
+  (a, b) => b.data.scoreOverall - a.data.scoreOverall,
+);
+
+const total = builders.length;
+
+// Format score as German decimal (4.8 -> "4,8")
+const fmt = (n: number) => n.toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+// Build a 5-star string with filled + empty stars based on rounded score
+function stars(score: number) {
+  const filled = Math.round(score);
+  return { filled, empty: 5 - filled };
+}
+
+// Map free enum to symbol + class
+const freeMap: Record<string, { sym: string; cls: string }> = {
+  yes: { sym: "✓", cls: "yes" },
+  partial: { sym: "◐", cls: "partial" },
+  no: { sym: "✗", cls: "no" },
+};
+
+const title = "Homepage-Baukasten Vergleich 2026: Anbieter im Test - HomepageTooltester";
+const description =
+  "Alle Homepage-Baukästen auf einen Blick: sortiere nach Gesamt-Score, Preis oder Funktion. Jeder Baukasten wurde mit einer echten Test-Website nach 6 Kriterien geprüft.";
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- PAGE HEAD -->
+  <div class="wrap">
+    <div class="crumb"><a href="/">Home</a> › <span>Baukasten-Vergleich</span></div>
+    <div class="pagehead">
+      <span class="badge badge-gold">★ Aktualisiert Juni 2026</span>
+      <h1>Homepage-Baukasten Vergleich 2026: {total} Anbieter im Test</h1>
+      <p>
+        Alle Tools auf einen Blick - sortiere nach Gesamt-Score, Preis oder Funktion.
+        Jeder Baukasten wurde mit einer echten Test-Website nach 6 Kriterien geprüft.
+      </p>
+      <div class="meta">
+        <span><b>{total}</b> Anbieter getestet</span>
+        <span><b>120+</b> Stunden im Test</span>
+        <span>Letztes Update: <b>1. Juni 2026</b></span>
+        <span>Geprüft von <b>der Redaktion</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filterbar">
+    <div class="wrap">
+      <span class="lbl">Filter:</span>
+      <button class="pill on">Alle</button>
+      <button class="pill">Für Einsteiger</button>
+      <button class="pill">Online-Shop</button>
+      <button class="pill">Server in DE</button>
+      <button class="pill">Kostenlos verfügbar</button>
+      <button class="pill">KI-Funktionen</button>
+      <div class="right">
+        <span class="lbl">Sortieren:</span>
+        <select class="select">
+          <option>Gesamt-Score (höchste)</option>
+          <option>Preis (günstigste)</option>
+          <option>Bedienung</option>
+          <option>Design</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="wrap">
+    <div class="legend">
+      <span><span class="yes">✓</span> enthalten</span>
+      <span><span class="partial">◐</span> eingeschränkt</span>
+      <span><span class="no">✗</span> nicht enthalten</span>
+      <span style="margin-left:auto"
+        >Provisions-Hinweis: Anbieter-Links sind Affiliate-Links - ohne Einfluss auf die Bewertung.</span
+      >
+    </div>
+    <div class="tablehint">← Tabelle horizontal scrollen →</div>
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Baukasten</th>
+            <th class="sortable sorted">Gesamt</th>
+            <th class="sortable">Bedienung</th>
+            <th class="sortable">Design</th>
+            <th class="sortable">SEO</th>
+            <th class="sortable">Preis ab</th>
+            <th>Shop</th>
+            <th>DE-Server</th>
+            <th>Gratis</th>
+            <th>Am besten für</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            builders.map((b, i) => {
+              const s = stars(b.data.scoreOverall);
+              const fr = freeMap[b.data.free];
+              const isWinner = i === 0;
+              return (
+                <tr class={isWinner ? "featured" : ""}>
+                  <td class="rank-cell">{i + 1}</td>
+                  <td>
+                    <div class="tool-cell">
+                      <BuilderLogo text={b.data.logoText} color={b.data.color} />
+                      <div>
+                        <span class="nm">
+                          {b.data.name}
+                          {isWinner && b.data.award && (
+                            <span class="badge badge-gold" style="vertical-align:middle">
+                              {b.data.award}
+                            </span>
+                          )}
+                        </span>
+                        <span class="tag">{b.data.tagline}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="score-cell">
+                    <span class="v">{fmt(b.data.scoreOverall)}</span>
+                    <span class="stars">
+                      {"★".repeat(s.filled)}
+                      {s.empty > 0 && <span class="e">{"★".repeat(s.empty)}</span>}
+                    </span>
+                  </td>
+                  <td>{fmt(b.data.scores.bedienung)}</td>
+                  <td>{fmt(b.data.scores.design)}</td>
+                  <td>{fmt(b.data.scores.seo)}</td>
+                  <td class="price-cell">
+                    <span class="p">{b.data.priceFrom}</span>
+                    <span class="sub">{b.data.priceNote}</span>
+                  </td>
+                  <td class={b.data.shop ? "yes" : "no"}>{b.data.shop ? "✓" : "✗"}</td>
+                  <td class={b.data.deServer ? "yes" : "no"}>{b.data.deServer ? "✓" : "✗"}</td>
+                  <td class={fr.cls}>{fr.sym}</td>
+                  <td class="bestfor">{b.data.bestFor}</td>
+                  <td class="cta-cell">
+                    <a href={getAffiliateUrl(b.data.slug).url} target="_blank" class="btn btn-primary btn-sm" rel="sponsored nofollow">
+                      Zum Anbieter
+                    </a>
+                    <a href={`/test/${b.data.slug}`} class="btn btn-outline btn-sm">
+                      Testbericht
+                    </a>
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- METHODOLOGY -->
+  <div class="wrap">
+    <div class="method">
+      <div class="ic">🔬</div>
+      <div>
+        <h3>Wie diese Tabelle entsteht</h3>
+        <p>
+          Wir erstellen mit jedem Baukasten dieselbe Test-Website und bewerten 6 Kriterien
+          (Bedienung, Design, Funktionen, SEO, Preis-Leistung, Support) nach einem festen
+          Punkteschema. Der Gesamt-Score ist der gewichtete Durchschnitt. Affiliate-Provisionen
+          beeinflussen weder Noten noch Reihenfolge.
+        </p>
+      </div>
+      <a href="/ueber-uns" class="btn btn-outline">Vollständige Methodik →</a>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="wrap faqsec">
+    <span class="eyebrow">Häufige Fragen</span>
+    <h2 style="margin:10px 0 22px">Fragen zum Vergleich</h2>
+    <details class="faq" open>
+      <summary>Welcher Homepage-Baukasten ist 2026 der beste?</summary>
+      <p>
+        Im Gesamt-Test führt Wix mit 4,8 von 5 Punkten. Für spezielle Anwendungsfälle - etwa einen
+        reinen Online-Shop oder ein Foto-Portfolio - kann jedoch ein anderer Anbieter besser passen.
+        Nutze die Filter oben oder unseren <a href="/baukasten-finder">Baukasten-Finder</a>.
+      </p>
+    </details>
+    <details class="faq">
+      <summary>Wie oft aktualisiert ihr die Vergleichstabelle?</summary>
+      <p>
+        Wir prüfen Preise und Funktionen laufend und überarbeiten die Tabelle bei relevanten
+        Änderungen. Der aktuelle Stand ist immer oben im Seitenkopf vermerkt (derzeit 1. Juni 2026).
+      </p>
+    </details>
+    <details class="faq">
+      <summary>Was bedeuten die Symbole ✓ ◐ ✗?</summary>
+      <p>
+        ✓ = Funktion vollständig enthalten, ◐ = nur eingeschränkt oder in höheren Tarifen, ✗ =
+        nicht verfügbar. Details findest du im jeweiligen Testbericht.
+      </p>
+    </details>
+  </div>
+</BaseLayout>

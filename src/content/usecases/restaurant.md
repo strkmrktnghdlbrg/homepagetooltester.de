@@ -1,0 +1,67 @@
+---
+title: "Bester Homepage-Baukasten für Restaurants 2026"
+slug: "restaurant"
+accentEmoji: "🍽️"
+heroHighlight: "Restaurants"
+lede: "Speisekarte, Tischreservierung, Google-Maps und tolle Food-Fotos - wir haben getestet, mit welchem Baukasten Gastronomen am schnellsten online gehen."
+requirements:
+  - icon: "📋"
+    title: "Digitale Speisekarte"
+    text: "Leicht aktualisierbar, mit Preisen, Allergenen und Kategorien."
+  - icon: "📅"
+    title: "Tischreservierung"
+    text: "Integriertes Buchungssystem oder Anbindung an OpenTable und Co."
+  - icon: "📍"
+    title: "Google Maps und Öffnungszeiten"
+    text: "Anfahrt, Kontakt und aktuelle Zeiten direkt sichtbar."
+  - icon: "📱"
+    title: "Mobile First"
+    text: "Über 70% der Gäste suchen am Handy - die Seite muss mobil glänzen."
+  - icon: "📸"
+    title: "Food-Galerien"
+    text: "Große, schnell ladende Bilder, die Appetit machen."
+  - icon: "🔍"
+    title: "Lokales SEO"
+    text: "Gefunden werden bei Restaurant plus Stadt - inkl. Google-Business-Anbindung."
+topBuilders:
+  - builderSlug: "wix"
+    why:
+      - "Wix Restaurants App (Menü und Reservierung)"
+      - "Bestell- und Lieferfunktion integrierbar"
+      - "Über 50 Gastro-Vorlagen"
+      - "Top mobile Darstellung"
+  - builderSlug: "jimdo"
+    why:
+      - "Server in Deutschland (DSGVO)"
+      - "Schnell startklar, sehr einfach"
+      - "Gute lokale SEO-Tools"
+      - "Speisekarte als PDF oder Liste"
+  - builderSlug: "squarespace"
+    why:
+      - "Schönste Design-Vorlagen"
+      - "OpenTable-Integration"
+      - "Ideal für gehobene Gastronomie"
+      - "Starke Bildpräsentation"
+steps:
+  - title: "Baukasten wählen"
+    text: "Starte mit unserem Testsieger Wix oder nutze den Finder für deine Situation."
+  - title: "Gastro-Vorlage anpassen"
+    text: "Wähle eine Restaurant-Vorlage und tausche Logo, Farben und Bilder."
+  - title: "Speisekarte und Reservierung"
+    text: "Menü einpflegen, Reservierungs-App und Öffnungszeiten ergänzen."
+  - title: "Online gehen"
+    text: "Eigene Domain verbinden, bei Google eintragen, fertig."
+faq:
+  - q: "Was kostet eine Restaurant-Website mit einem Baukasten?"
+    a: "Für eine professionelle Seite mit eigener Domain solltest du mit 12 bis 20 € pro Monat rechnen. Reservierungs- oder Bestell-Apps können je nach Anbieter extra kosten. Eine einfache Visitenkarten-Seite geht günstiger."
+  - q: "Brauche ich für die Reservierung ein extra Tool?"
+    a: "Nicht zwingend. Wix bringt mit der Restaurants-App ein eigenes Reservierungssystem mit. Bei anderen Baukästen lässt sich OpenTable oder ein Formular einbinden."
+  - q: "Kann ich die Speisekarte selbst aktualisieren?"
+    a: "Ja. Bei allen empfohlenen Baukästen änderst du Preise und Gerichte selbst im Editor - ohne Programmierkenntnisse und ohne Agentur."
+image:
+  url: "/images/content/restaurant.webp"
+  credit: "Bild: KI-generiert · HomepageTooltester"
+  creditUrl: "/ueber-uns"
+---
+
+Für unseren Test haben wir mit jedem Baukasten eine echte Beispiel-Speisekarte und ein Reservierungsformular gebaut. Wix lieferte die rundeste Lösung: In knapp zwei Stunden stand eine vollständige Restaurant-Seite inklusive mobiler Ansicht.

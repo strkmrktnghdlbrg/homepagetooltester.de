@@ -1,0 +1,881 @@
+---
+const title = "Baukasten-Finder: Finde dein Tool in 6 Fragen - HomepageTooltester";
+const description =
+  "Beantworte 6 kurze Fragen zu deinem Projekt und finde in rund 60 Sekunden den Homepage-Baukasten, der wirklich zu dir passt. Kostenlos und ohne Anmeldung.";
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header>
+      <div class="wrap nav">
+        <a href="/" class="logo"><span class="mark">★</span> HomepageTooltester</a>
+        <a href="/" class="back">← Zurück zur Startseite</a>
+      </div>
+    </header>
+
+    <div class="quizwrap">
+      <!-- INTRO -->
+      <div id="intro" class="intro">
+        <span class="badge">★ Kostenlos & ohne Anmeldung</span>
+        <h1>Finde deinen <span class="hl">Baukasten</span> in 6 Fragen.</h1>
+        <p>
+          Beantworte ein paar kurze Fragen zu deinem Projekt - wir empfehlen dir das Tool, das
+          wirklich passt.
+        </p>
+        <div class="feats">
+          <span><b>6</b> kurze Fragen</span>
+          <span><b>~60</b> Sekunden</span>
+          <span><b>14</b> Tools im Abgleich</span>
+        </div>
+        <button class="btn btn-primary" style="font-size:17px;padding:14px 28px" id="startbtn"
+          >Finder starten →</button
+        >
+      </div>
+
+      <!-- QUIZ -->
+      <div id="quiz" style="display:none">
+        <div class="prog">
+          <div class="row">
+            <span class="step">Frage <span id="qnum">1</span> von 6</span><span id="qpct">17%</span>
+          </div>
+          <div class="track"><i id="bar" style="width:17%"></i></div>
+        </div>
+        <div class="qcard">
+          <h2 id="qtitle">Frage</h2>
+          <div class="hint" id="qhint">Wähle die Option, die am besten passt.</div>
+          <div class="opts" id="opts"></div>
+        </div>
+        <div class="qnav">
+          <button class="btn btn-ghost" id="backbtn">← Zurück</button>
+          <span style="font-size:13px;color:#9b9bc4">Klicke eine Antwort zum Fortfahren</span>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div id="result" class="result">
+        <div class="top">
+          <span class="badge">★ Dein Ergebnis</span>
+          <h2>Dein passender Baukasten</h2>
+          <p>Basierend auf deinen Antworten empfehlen wir:</p>
+        </div>
+        <div class="wincard">
+          <div class="wtop">
+            <div class="rel">
+              <div class="lg" id="winlg">Wix</div>
+              <div class="nm" id="winnm">Wix</div>
+              <div class="match">
+                <b id="winmatch">96%</b> Übereinstimmung mit deinen Angaben
+              </div>
+            </div>
+          </div>
+          <div class="wbody">
+            <div class="why">Warum dieses Tool zu dir passt</div>
+            <ul id="winwhy"></ul>
+            <div class="price">ab <b id="winprice">12 €</b> / Monat · kostenlos testbar</div>
+            <div class="wcta">
+              <a href="#" class="btn btn-primary" id="winanbieter">Zum Anbieter →</a>
+              <a
+                href="/baukasten-vergleich"
+                class="btn"
+                id="wintest"
+                style="background:var(--color-pewter);color:var(--color-violet)">Testbericht lesen</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="runners" id="runners"></div>
+        <div class="actions">
+          <button class="btn btn-light" id="restartbtn">↻ Neu starten</button>
+          <a href="/baukasten-vergleich" class="btn btn-ghost">Alle im Vergleich ansehen →</a>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+      const BUILDERS = {
+        onepage: {
+          name: "Onepage",
+          lg: "On",
+          color: "#6c2bd9",
+          price: "12 €",
+          slug: "onepage",
+          url: "https://onepage.io/?via=wbmgx",
+          why: [
+            "In Minuten zur fertigen Seite",
+            "Konversionsstarke Vorlagen & Blocks",
+            "Zahlung, Termine & Formulare integriert",
+            "Server in Deutschland (DSGVO)",
+          ],
+        },
+        wix: {
+          name: "Wix",
+          lg: "Wix",
+          color: "#0c6ebd",
+          price: "12 €",
+          slug: "wix",
+          why: [
+            "Maximale Design-Freiheit",
+            "900+ Vorlagen für jede Branche",
+            "Starke KI-Tools",
+            "Riesiger App-Markt",
+          ],
+        },
+        jimdo: {
+          name: "Jimdo",
+          lg: "J",
+          color: "#0a8a3f",
+          price: "9 €",
+          slug: "jimdo",
+          why: [
+            "Server in Deutschland (DSGVO)",
+            "Kinderleichte Bedienung",
+            "Schnell startklar",
+            "Faire Preise",
+          ],
+        },
+        ionos: {
+          name: "IONOS",
+          lg: "IO",
+          color: "#003d8f",
+          price: "1 €",
+          slug: "ionos",
+          why: [
+            "Domain inklusive",
+            "Top Preis-Leistung",
+            "Server in Deutschland",
+            "Gute Support-Hotline",
+          ],
+        },
+        squarespace: {
+          name: "Squarespace",
+          lg: "Sq",
+          color: "#111",
+          price: "16 €",
+          slug: "squarespace",
+          why: [
+            "Schönste Design-Vorlagen",
+            "Ideal für Kreative",
+            "Starke Bildpräsentation",
+            "Premium-Look",
+          ],
+        },
+        shopify: {
+          name: "Shopify",
+          lg: "Sh",
+          color: "#5a8a2c",
+          price: "27 €",
+          slug: "shopify",
+          why: [
+            "Beste E-Commerce-Funktionen",
+            "Skaliert mit deinem Shop",
+            "Viele Zahlungsarten",
+            "Riesiges App-Ökosystem",
+          ],
+        },
+        site123: {
+          name: "Site123",
+          lg: "S",
+          color: "#e0533d",
+          price: "8 €",
+          slug: "site123",
+          why: [
+            "Maximal simpel",
+            "In Minuten online",
+            "Gratis-Tarif verfügbar",
+            "Geführter Einstieg",
+          ],
+        },
+      };
+      const QUESTIONS = [
+        {
+          t: "Was möchtest du erstellen?",
+          h: "Das bestimmt die wichtigsten Funktionen.",
+          o: [
+            { ic: "🏢", l: "Unternehmens- oder Vereinsseite", s: { onepage: 4, jimdo: 3, wix: 2, ionos: 2 } },
+            { ic: "🛒", l: "Online-Shop", s: { shopify: 3, wix: 2, jimdo: 1 } },
+            { ic: "🎨", l: "Portfolio, Blog oder Kreativseite", s: { squarespace: 3, wix: 2 } },
+            { ic: "💍", l: "Event- oder Hochzeitsseite", s: { onepage: 4, wix: 2, site123: 2 } },
+          ],
+        },
+        {
+          t: "Wie viel Erfahrung hast du?",
+          h: "Ehrlich sein lohnt sich.",
+          o: [
+            {
+              ic: "🌱",
+              l: "Anfänger - noch nie eine Website gebaut",
+              s: { onepage: 3, site123: 3, jimdo: 2, ionos: 1 },
+            },
+            { ic: "🙂", l: "Etwas Erfahrung", s: { jimdo: 2, wix: 2 } },
+            { ic: "🚀", l: "Ich kenne mich aus", s: { wix: 3, squarespace: 2 } },
+          ],
+        },
+        {
+          t: "Wie wichtig ist dir Design-Freiheit?",
+          h: "Volle Kontrolle vs. schnelle Vorlagen.",
+          o: [
+            {
+              ic: "🎯",
+              l: "Sehr wichtig - ich will alles selbst gestalten",
+              s: { wix: 3, squarespace: 2 },
+            },
+            { ic: "⚖️", l: "Mittel - Vorlage anpassen reicht", s: { jimdo: 2, wix: 1, squarespace: 1 } },
+            { ic: "⚡", l: "Egal - Hauptsache schnell fertig", s: { onepage: 4, site123: 3, jimdo: 2 } },
+          ],
+        },
+        {
+          t: "Brauchst du einen Online-Shop?",
+          h: "Auch nur ein paar Produkte zählen.",
+          o: [
+            { ic: "💳", l: "Ja, Verkauf ist der Hauptzweck", s: { shopify: 3, wix: 1 } },
+            { ic: "📦", l: "Vielleicht ein paar Produkte", s: { onepage: 2, wix: 2, jimdo: 2 } },
+            { ic: "🚫", l: "Nein, kein Verkauf", s: { jimdo: 1, squarespace: 1, ionos: 1 } },
+          ],
+        },
+        {
+          t: "Wie wichtig sind dir Server in Deutschland / DSGVO?",
+          h: "Relevant für Datenschutz und Vertrauen.",
+          o: [
+            { ic: "🔒", l: "Sehr wichtig", s: { onepage: 3, jimdo: 3, ionos: 3 } },
+            { ic: "🤷", l: "Eher nebensächlich", s: { wix: 2, squarespace: 2, shopify: 1 } },
+          ],
+        },
+        {
+          t: "Was ist dein Budget pro Monat?",
+          h: "Richtwerte für einen Bezahltarif.",
+          o: [
+            { ic: "🪙", l: "Unter 10 €", s: { site123: 2, jimdo: 2, ionos: 3 } },
+            { ic: "💶", l: "10 - 20 €", s: { onepage: 3, wix: 3, jimdo: 1, squarespace: 1 } },
+            { ic: "💎", l: "Über 20 € - Hauptsache es passt", s: { squarespace: 2, shopify: 2, wix: 1 } },
+          ],
+        },
+      ];
+
+      let cur = 0;
+      let scores = {};
+      let answers = [];
+
+      function start() {
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("quiz").style.display = "block";
+        cur = 0;
+        scores = {};
+        answers = [];
+        render();
+      }
+      function render() {
+        const q = QUESTIONS[cur];
+        document.getElementById("qnum").textContent = cur + 1;
+        const pct = Math.round(((cur + 1) / QUESTIONS.length) * 100);
+        document.getElementById("qpct").textContent = pct + "%";
+        document.getElementById("bar").style.width = pct + "%";
+        document.getElementById("qtitle").textContent = q.t;
+        document.getElementById("qhint").textContent = q.h;
+        const keys = ["A", "B", "C", "D"];
+        const opts = document.getElementById("opts");
+        opts.innerHTML = "";
+        q.o.forEach((o, i) => {
+          const b = document.createElement("button");
+          b.className = "opt" + (answers[cur] === i ? " sel" : "");
+          b.innerHTML = `<span class="ic">${o.ic}</span> <span>${o.l}</span> <span class="k">${keys[i]}</span>`;
+          b.onclick = () => choose(i);
+          opts.appendChild(b);
+        });
+        document.getElementById("backbtn").style.visibility = cur === 0 ? "hidden" : "visible";
+      }
+      function choose(i) {
+        answers[cur] = i;
+        // brief highlight then advance
+        render();
+        setTimeout(() => {
+          if (cur < QUESTIONS.length - 1) {
+            cur++;
+            render();
+          } else {
+            finish();
+          }
+        }, 220);
+      }
+      function back() {
+        if (cur > 0) {
+          cur--;
+          render();
+        }
+      }
+      function finish() {
+        // tally
+        scores = {};
+        Object.keys(BUILDERS).forEach((k) => (scores[k] = 0));
+        answers.forEach((ai, qi) => {
+          const s = QUESTIONS[qi].o[ai].s;
+          for (const k in s) scores[k] += s[k];
+        });
+        const ranked = Object.keys(BUILDERS).sort((a, b) => scores[b] - scores[a]);
+        const win = BUILDERS[ranked[0]];
+        const maxPossible = ranked.reduce((m, k) => Math.max(m, scores[k]), 1);
+        // synthetic match % (cap 98)
+        const match = Math.min(98, Math.round(70 + (scores[ranked[0]] / maxPossible) * 28));
+        document.getElementById("quiz").style.display = "none";
+        const r = document.getElementById("result");
+        r.classList.add("show");
+        document.getElementById("winlg").textContent = win.lg;
+        document.getElementById("winlg").style.background = win.color;
+        document.getElementById("winnm").textContent = win.name;
+        document.getElementById("winmatch").textContent = match + "%";
+        document.getElementById("winprice").textContent = win.price;
+        document.getElementById("winwhy").innerHTML = win.why.map((w) => `<li>${w}</li>`).join("");
+        document.getElementById("wintest").setAttribute("href", "/test/" + win.slug);
+        const wa = document.getElementById("winanbieter");
+        wa.setAttribute("href", win.url || "#");
+        wa.setAttribute("target", "_blank");
+        wa.setAttribute("rel", "sponsored nofollow noopener");
+        // runners up (2)
+        const run = document.getElementById("runners");
+        run.innerHTML = "";
+        ranked.slice(1, 3).forEach((k) => {
+          const b = BUILDERS[k];
+          const el = document.createElement("a");
+          el.className = "runner";
+          el.setAttribute("href", "/test/" + b.slug);
+          el.innerHTML = `<span class="lg" style="background:${b.color}">${b.lg}</span><div><div class="nm">${b.name}</div><div class="v">Alternative · ab ${b.price}</div></div><span class="lk">→</span>`;
+          run.appendChild(el);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function restart() {
+        document.getElementById("result").classList.remove("show");
+        document.getElementById("intro").style.display = "block";
+        window.scrollTo({ top: 0 });
+      }
+
+      document.getElementById("startbtn").addEventListener("click", start);
+      document.getElementById("backbtn").addEventListener("click", back);
+      document.getElementById("restartbtn").addEventListener("click", restart);
+    </script>
+
+    <style>
+      :root {
+        --color-midnight-ink: #08093f;
+        --gradient-midnight-ink: linear-gradient(160deg, rgb(6, 8, 24), rgb(11, 12, 58));
+        --color-slate-text: #686878;
+        --color-violet: #494bcb;
+        --color-sunshine: #ffde87;
+        --color-iris: #9f7ad0;
+        --color-pewter: #f6f6fa;
+        --color-soft: #aaaab0;
+        --font: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        --maxw: 1200px;
+        --radius-card: 15.24px;
+        --radius-btn: 7.62px;
+        --radius-badge: 35.81px;
+        --shadow-md: rgba(0, 0, 0, 0.04) 0px 20px 13px 0px;
+        --shadow-card: rgba(20, 20, 60, 0.06) 0px 12px 30px 0px;
+        --green: #1faa6b;
+      }
+      :global(html),
+      :global(body) {
+        margin: 0;
+        padding: 0;
+      }
+      :global(*) {
+        box-sizing: border-box;
+      }
+      :global(body) {
+        font-family: var(--font);
+        color: #fff;
+        letter-spacing: -0.02em;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        background: var(--gradient-midnight-ink);
+        min-height: 100vh;
+      }
+      .wrap {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      h1,
+      h2,
+      h3 {
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1.12;
+        margin: 0;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 700;
+        font-size: 15px;
+        border-radius: var(--radius-btn);
+        padding: 11px 20px;
+        cursor: pointer;
+        border: 0;
+        transition: 0.15s;
+        letter-spacing: -0.02em;
+        font-family: var(--font);
+      }
+      .btn-primary {
+        background: var(--color-violet);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #5a5cdb;
+      }
+      .btn-light {
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+      }
+      .btn-light:hover {
+        background: rgba(255, 255, 255, 0.24);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: #c4c4e0;
+        font-weight: 500;
+      }
+      .btn-ghost:hover {
+        color: #fff;
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* NAV */
+      header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 900;
+        font-size: 18px;
+        letter-spacing: -0.04em;
+        color: #fff;
+      }
+      .logo .mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        display: grid;
+        place-items: center;
+        color: var(--color-sunshine);
+        font-size: 16px;
+      }
+      .nav a.back {
+        font-size: 14px;
+        color: #9b9bc4;
+      }
+      .nav a.back:hover {
+        color: #fff;
+      }
+
+      /* QUIZ */
+      .quizwrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+        position: relative;
+      }
+      .quizwrap::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(73, 75, 203, 0.35), transparent 62%);
+        filter: blur(40px);
+        z-index: 0;
+      }
+      .quizwrap > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .intro {
+        text-align: center;
+      }
+      .intro .badge {
+        display: inline-block;
+        background: var(--color-sunshine);
+        color: #5a4a14;
+        border-radius: var(--radius-badge);
+        padding: 5px 15px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 18px;
+      }
+      .intro h1 {
+        font-size: 42px;
+        letter-spacing: -0.8px;
+        margin-bottom: 14px;
+      }
+      .intro h1 .hl {
+        color: var(--color-sunshine);
+      }
+      .intro p {
+        font-size: 18px;
+        color: #c4c4e0;
+        max-width: 480px;
+        margin: 0 auto 28px;
+      }
+      .intro .feats {
+        display: flex;
+        gap: 24px;
+        justify-content: center;
+        font-size: 13px;
+        color: #9b9bc4;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+      .intro .feats b {
+        color: #fff;
+      }
+
+      /* progress */
+      .prog {
+        margin-bottom: 26px;
+      }
+      .prog .row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        color: #9b9bc4;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .prog .row .step {
+        color: var(--color-sunshine);
+      }
+      .prog .track {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .prog .track i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--color-iris), var(--color-violet));
+        border-radius: 8px;
+        transition: width 0.35s ease;
+      }
+
+      /* question card */
+      .qcard {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 20px;
+        padding: 32px;
+        backdrop-filter: blur(8px);
+      }
+      .qcard h2 {
+        font-size: 26px;
+        margin-bottom: 6px;
+      }
+      .qcard .hint {
+        font-size: 14px;
+        color: #9b9bc4;
+        margin-bottom: 22px;
+      }
+      .opts {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px 18px;
+        cursor: pointer;
+        transition: 0.15s;
+        font-size: 16px;
+        font-weight: 500;
+        text-align: left;
+        color: #fff;
+        width: 100%;
+        font-family: var(--font);
+      }
+      .opt:hover {
+        background: rgba(73, 75, 203, 0.35);
+        border-color: var(--color-iris);
+        transform: translateX(3px);
+      }
+      .opt.sel {
+        background: rgba(73, 75, 203, 0.5);
+        border-color: var(--color-sunshine);
+      }
+      .opt .ic {
+        font-size: 24px;
+        width: 30px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .opt .k {
+        margin-left: auto;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.12);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .opt.sel .k {
+        background: var(--color-sunshine);
+        color: #5a4a14;
+      }
+
+      .qnav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 26px;
+      }
+
+      /* RESULT */
+      .result {
+        display: none;
+      }
+      .result.show {
+        display: block;
+      }
+      .result .top {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .result .top .badge {
+        display: inline-block;
+        background: var(--color-sunshine);
+        color: #5a4a14;
+        border-radius: var(--radius-badge);
+        padding: 5px 15px;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+      .result .top h2 {
+        font-size: 30px;
+      }
+      .result .top p {
+        color: #c4c4e0;
+        margin-top: 8px;
+      }
+
+      .wincard {
+        background: #fff;
+        color: #000;
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      .wincard .wtop {
+        background: var(--gradient-midnight-ink);
+        padding: 28px;
+        text-align: center;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .wincard .wtop::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(73, 75, 203, 0.5), transparent 65%);
+        filter: blur(20px);
+      }
+      .wincard .rel {
+        position: relative;
+      }
+      .wincard .lg {
+        width: 60px;
+        height: 60px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 900;
+        font-size: 19px;
+        margin: 0 auto 10px;
+      }
+      .wincard .nm {
+        font-size: 22px;
+        font-weight: 900;
+      }
+      .wincard .match {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #c4c4e0;
+      }
+      .wincard .match b {
+        color: var(--color-sunshine);
+        font-size: 18px;
+      }
+      .wincard .wbody {
+        padding: 24px;
+      }
+      .wincard .why {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-violet);
+        margin-bottom: 10px;
+      }
+      .wincard ul {
+        list-style: none;
+        margin-bottom: 18px;
+        padding: 0;
+      }
+      .wincard li {
+        font-size: 14px;
+        padding: 6px 0 6px 24px;
+        position: relative;
+        color: #2b2b38;
+      }
+      .wincard li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--green);
+        font-weight: 900;
+      }
+      .wincard .wcta {
+        display: flex;
+        gap: 10px;
+      }
+      .wincard .wcta .btn {
+        flex: 1;
+      }
+      .wincard .price {
+        text-align: center;
+        font-size: 13px;
+        color: var(--color-slate-text);
+        margin-bottom: 14px;
+      }
+      .wincard .price b {
+        color: #000;
+        font-size: 18px;
+      }
+
+      .runners {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .runner {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: 0.15s;
+      }
+      .runner:hover {
+        background: rgba(73, 75, 203, 0.25);
+        border-color: var(--color-iris);
+      }
+      .runner .lg {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 900;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+      .runner .nm {
+        font-weight: 900;
+        font-size: 15px;
+      }
+      .runner .v {
+        font-size: 12px;
+        color: #9b9bc4;
+      }
+      .runner .lk {
+        margin-left: auto;
+        font-size: 18px;
+        color: var(--color-iris);
+      }
+      .result .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 24px;
+      }
+
+      .finder-disclaimer {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 24px 48px;
+        text-align: center;
+        font-size: 12px;
+        color: #8a8ab0;
+      }
+
+      @media (max-width: 560px) {
+        .intro h1 {
+          font-size: 32px;
+        }
+        .qcard {
+          padding: 22px;
+        }
+        .runners {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <p class="finder-disclaimer">
+      Transparenz-Hinweis: Einige Links auf dieser Seite sind Affiliate-Links. Schließt du über
+      einen solchen Link einen Vertrag ab, erhalten wir eine Provision. Für dich entstehen dadurch
+      keine Mehrkosten. Die Empfehlung des Finders basiert auf deinen Angaben, nicht auf der
+      Provisionshöhe.
+    </p>
+  </body>
+</html>
