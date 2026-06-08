@@ -645,3 +645,8 @@ footer.site-footer { background: var(--color-midnight-ink); color: #9b9bc4; padd
   .runners { grid-template-columns: 1fr; }
   .foot-grid { grid-template-columns: 1fr; }
 }
+
+/* header search icon */
+.nav-search { display:inline-grid; place-items:center; width:38px; height:38px; font-size:22px; line-height:1; color:#2c2c3a; border-radius:8px; text-decoration:none; }
+.nav-search:hover { background:var(--color-pewter); color:var(--color-violet); }
+@media (max-width:900px){ .nav-search{ display:none; } }

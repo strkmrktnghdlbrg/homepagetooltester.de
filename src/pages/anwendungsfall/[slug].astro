@@ -41,9 +41,35 @@ const related = usecases
 
 const pageTitle = `${u.title} - HomepageTooltester`;
 const pageDesc = u.lede;
+
+const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Anwendungsfall" },
+      { "@type": "ListItem", position: 3, name: u.title },
+    ],
+  },
+  ...(u.faq && u.faq.length
+    ? [
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: u.faq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        },
+      ]
+    : []),
+];
 ---
 
-<BaseLayout title={pageTitle} description={pageDesc}>
+<BaseLayout title={pageTitle} description={pageDesc} ogType="article" image={u.image.url} jsonLd={schema}>
   <!-- HERO -->
   <div class="uhero">
     <div class="wrap">

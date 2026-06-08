@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const links = [
+  { href: "/baukasten-vergleich", label: "Baukasten-Vergleich 2026", sub: "Alle Tools in der großen Tabelle" },
+  { href: "/baukasten-finder", label: "Baukasten-Finder", sub: "In 6 Fragen zum passenden Tool" },
+  { href: "/test/onepage", label: "Testsieger: Onepage", sub: "Unser Platz 1 im Test 2026" },
+  { href: "/ratgeber", label: "Ratgeber & Magazin", sub: "Anleitungen, Kosten, SEO und mehr" },
+];
+---
+
+<BaseLayout
+  title="Seite nicht gefunden (404) | HomepageTooltester"
+  description="Diese Seite existiert nicht oder wurde verschoben. Hier geht es zurück zu Vergleich, Finder und Ratgeber."
+  noindex={true}
+>
+  <section>
+    <div class="wrap" style="max-width:760px;text-align:center;padding:40px 24px 20px">
+      <div style="font-size:84px;font-weight:900;letter-spacing:-3px;color:var(--color-violet);line-height:1">404</div>
+      <h1 style="font-size:34px;margin:8px 0 12px">Diese Seite gibt es nicht (mehr)</h1>
+      <p class="muted" style="font-size:17px;max-width:520px;margin:0 auto 8px">
+        Vielleicht wurde die Seite verschoben oder die Adresse hat sich vertippt. Nutze die Suche oder einen der Direkteinstiege unten.
+      </p>
+    </div>
+    <div class="wrap" style="max-width:760px">
+      <form action="/suche" method="get" style="display:flex;gap:8px;margin:0 auto 28px;max-width:520px">
+        <input type="search" name="q" placeholder="Tool, Branche oder Stichwort suchen ..."
+          style="flex:1;padding:13px 16px;border:1px solid #e2e2ec;border-radius:var(--radius-btn);font-family:inherit;font-size:15px" />
+        <button type="submit" class="btn btn-primary" style="width:auto">Suchen</button>
+      </form>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        {links.map((l) => (
+          <a href={l.href} style="display:block;background:#fff;border:1px solid #ececf2;border-radius:var(--radius-card);padding:20px;text-decoration:none;color:inherit;transition:.15s">
+            <div style="font-weight:900;font-size:17px">{l.label}</div>
+            <div class="muted" style="font-size:14px;margin-top:4px">{l.sub}</div>
+          </a>
+        ))}
+      </div>
+      <div style="text-align:center;margin:28px 0 10px">
+        <a href="/" class="btn btn-ghost">← Zur Startseite</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

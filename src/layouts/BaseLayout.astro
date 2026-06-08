@@ -7,26 +7,86 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  image?: string;
+  ogType?: string;
+  jsonLd?: Record<string, any>[];
 }
 const {
   title,
   description = "HomepageTooltester - unabhängige Tests und Vergleiche von Homepage-Baukästen wie Wix, Jimdo, IONOS, Squarespace, Shopify und Site123.",
   noindex = false,
+  image = "/images/og-default.png",
+  ogType = "website",
+  jsonLd = [],
 } = Astro.props;
+
+const site = Astro.site ?? new URL("https://www.homepagetooltester.de");
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(image, site).href;
+
+// Sitewide Basis-Schema (nur auf indexierbaren Seiten)
+const baseSchema = noindex
+  ? []
+  : [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "HomepageTooltester",
+        url: site.href,
+        logo: new URL("/favicon.svg", site).href,
+        description: "Unabhängige Tests und Vergleiche von Homepage-Baukästen.",
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "HomepageTooltester",
+        url: site.href,
+        inLanguage: "de-DE",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: new URL("/suche?q={search_term_string}", site).href,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ];
+const allSchema = [...baseSchema, ...jsonLd];
 ---
 <!doctype html>
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="HomepageTooltester" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
       rel="stylesheet"
     />
-    <title>{title}</title>
+    {allSchema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
   </head>
   <body>
     <Header />

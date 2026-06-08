@@ -66,11 +66,43 @@ const criteria = [
 ];
 
 const totalTested = Math.max(builders.length, 14);
+
+// --- JSON-LD: FAQPage (Startseite) ---
+const faqs = [
+  {
+    q: "Sind eure Tests wirklich unabhängig?",
+    a: "Ja. Wir testen jeden Baukasten mit einer echten Website nach denselben 6 Kriterien. Wir erhalten zwar Provisionen, wenn du über einen Link einen Vertrag abschließt - das beeinflusst aber weder die Noten noch das Ranking.",
+  },
+  {
+    q: "Welcher Homepage-Baukasten ist der beste?",
+    a: `In unserem Test 2026 liegt ${builders[0]?.name ?? "Onepage"} mit einem Gesamtscore von ${de(builders[0]?.scoreOverall ?? 4.9)} vorne. Den besten gibt es aber nicht pauschal - für einen Online-Shop oder ein Portfolio kann ein anderer Anbieter besser passen. Nutze dafür unseren Baukasten-Finder.`,
+  },
+  {
+    q: "Gibt es auch kostenlose Baukästen?",
+    a: "Ja, mehrere Anbieter haben Gratis-Tarife. Diese zeigen meist Fremdwerbung und erlauben keine eigene Domain. Für eine professionelle Website empfehlen wir einen günstigen Bezahltarif.",
+  },
+  {
+    q: "Wie aktuell sind die Testergebnisse?",
+    a: "Wir prüfen die Anbieter laufend. Das aktuelle Ranking hat den Stand Juni 2026. Größere Updates der Tools fließen zeitnah in unsere Bewertungen ein.",
+  },
+];
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
 ---
 
 <BaseLayout
   title="HomepageTooltester - Homepage-Baukasten Vergleich & Test 2026"
-  description="Unabhängiger Vergleich der besten Homepage-Baukästen 2026: Wix, Jimdo, IONOS, Squarespace, Shopify und Site123. Transparente Scores aus 6 Testkriterien statt Werbeversprechen."
+  description={`Unabhängiger Vergleich der besten Homepage-Baukästen 2026. Testsieger: ${builders[0]?.name ?? "Onepage"} (${de(builders[0]?.scoreOverall ?? 4.9)}/5), gefolgt von Wix, Jimdo, IONOS und Co. Transparente Scores aus 6 Testkriterien statt Werbeversprechen.`}
+  jsonLd={schema}
 >
   <!-- HERO -->
   <section class="hero">

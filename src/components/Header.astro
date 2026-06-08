@@ -5,7 +5,7 @@ const isActive = (href: string) =>
 
 const links = [
   { href: "/baukasten-vergleich", label: "Baukasten-Vergleich" },
-  { href: "/test/wix", label: "Testberichte", match: "/test" },
+  { href: "/test/onepage", label: "Testberichte", match: "/test" },
   { href: "/anwendungsfall/restaurant", label: "Anwendungsfall", match: "/anwendungsfall" },
   { href: "/ratgeber", label: "Ratgeber" },
   { href: "/ratgeber", label: "Kosten" },
@@ -21,6 +21,7 @@ const links = [
       ))}
     </nav>
     <div class="nav-cta">
+      <a href="/suche" class="nav-search" aria-label="Suche" title="Suche">⌕</a>
       <a href="/baukasten-finder" class="btn btn-primary btn-sm">Baukasten finden</a>
       <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false">☰</button>
     </div>
@@ -36,5 +37,6 @@ const links = [
   {links.map((l) => (
     <a href={l.href} class={`dl ${isActive(l.match ?? l.href) ? "active" : ""}`}>{l.label}</a>
   ))}
+  <a href="/suche" class={`dl ${isActive("/suche") ? "active" : ""}`}>Suche</a>
   <a href="/baukasten-finder" class="btn btn-primary">Baukasten finden</a>
 </aside>

@@ -29,9 +29,50 @@ const freeMap: Record<string, { sym: string; cls: string }> = {
 const title = "Homepage-Baukasten Vergleich 2026: Anbieter im Test - HomepageTooltester";
 const description =
   "Alle Homepage-Baukästen auf einen Blick: sortiere nach Gesamt-Score, Preis oder Funktion. Jeder Baukasten wurde mit einer echten Test-Website nach 6 Kriterien geprüft.";
+
+// --- JSON-LD: ItemList (Ranking) + FAQPage ---
+const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const faqs = [
+  {
+    q: "Welcher Homepage-Baukasten ist 2026 der beste?",
+    a: "Im Gesamt-Test führt Onepage mit 4,9 von 5 Punkten. Für spezielle Anwendungsfälle wie einen reinen Online-Shop oder ein Foto-Portfolio kann jedoch ein anderer Anbieter besser passen. Nutze die Filter oder unseren Baukasten-Finder.",
+  },
+  {
+    q: "Wie oft aktualisiert ihr die Vergleichstabelle?",
+    a: "Wir prüfen Preise und Funktionen laufend und überarbeiten die Tabelle bei relevanten Änderungen. Der aktuelle Stand ist immer oben im Seitenkopf vermerkt (derzeit 1. Juni 2026).",
+  },
+  {
+    q: "Was bedeuten die Symbole in der Tabelle?",
+    a: "Häkchen = Funktion vollständig enthalten, Halbkreis = nur eingeschränkt oder in höheren Tarifen, Kreuz = nicht verfügbar. Details findest du im jeweiligen Testbericht.",
+  },
+];
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Homepage-Baukasten Ranking 2026",
+    itemListOrder: "https://schema.org/ItemListOrderDescending",
+    numberOfItems: builders.length,
+    itemListElement: builders.map((b, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: b.data.name,
+      url: new URL(`/test/${b.data.slug}`, siteUrl).href,
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} jsonLd={schema}>
   <!-- PAGE HEAD -->
   <div class="wrap">
     <div class="crumb"><a href="/">Home</a> › <span>Baukasten-Vergleich</span></div>
@@ -186,8 +227,8 @@ const description =
     <details class="faq" open>
       <summary>Welcher Homepage-Baukasten ist 2026 der beste?</summary>
       <p>
-        Im Gesamt-Test führt Wix mit 4,8 von 5 Punkten. Für spezielle Anwendungsfälle - etwa einen
-        reinen Online-Shop oder ein Foto-Portfolio - kann jedoch ein anderer Anbieter besser passen.
+        Im Gesamt-Test führt Onepage mit 4,9 von 5 Punkten. Für spezielle Anwendungsfälle wie einen
+        reinen Online-Shop oder ein Foto-Portfolio kann jedoch ein anderer Anbieter besser passen.
         Nutze die Filter oben oder unseren <a href="/baukasten-finder">Baukasten-Finder</a>.
       </p>
     </details>

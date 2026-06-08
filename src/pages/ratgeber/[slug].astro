@@ -41,9 +41,41 @@ const restCat = others.filter((x) => x.data.category !== a.category);
 const related = [...sameCat, ...restCat].slice(0, 4);
 
 const pageDesc = a.excerpt;
+
+const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const articleUrl = new URL(`/ratgeber/${a.slug}`, siteUrl).href;
+const articleImg = new URL(a.image.url, siteUrl).href;
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: a.title,
+    description: a.excerpt,
+    image: articleImg,
+    datePublished: a.date,
+    dateModified: a.date,
+    inLanguage: "de-DE",
+    mainEntityOfPage: articleUrl,
+    author: { "@type": "Person", name: a.author },
+    publisher: {
+      "@type": "Organization",
+      name: "HomepageTooltester",
+      logo: { "@type": "ImageObject", url: new URL("/favicon.svg", siteUrl).href },
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Ratgeber", item: new URL("/ratgeber", siteUrl).href },
+      { "@type": "ListItem", position: 3, name: a.title },
+    ],
+  },
+];
 ---
 
-<BaseLayout title={`${a.title} - HomepageTooltester`} description={pageDesc}>
+<BaseLayout title={`${a.title} - HomepageTooltester`} description={pageDesc} ogType="article" image={a.image.url} jsonLd={schema}>
   <div class="wrap">
     <div class="crumb">
       <a href="/">Home</a> › <a href="/ratgeber">Ratgeber</a> ›

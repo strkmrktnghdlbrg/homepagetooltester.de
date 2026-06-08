@@ -74,9 +74,64 @@ const alternatives = builders
 
 const pageTitle = `${b.name} im Test 2026: Erfahrungen, Kosten & Bewertung`;
 const pageDesc = b.verdict;
+
+// --- JSON-LD: SoftwareApplication + editorial Review + Breadcrumb + FAQ ---
+const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const priceNum =
+  parseFloat((b.priceFrom || "").replace(/[^0-9.,]/g, "").replace(",", ".")) || undefined;
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: b.name,
+    applicationCategory: "WebApplication",
+    operatingSystem: "Web (Browser)",
+    url: new URL(`/test/${b.slug}`, siteUrl).href,
+    ...(priceNum
+      ? { offers: { "@type": "Offer", price: priceNum, priceCurrency: "EUR" } }
+      : {}),
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: b.scoreOverall,
+      bestRating: 5,
+      worstRating: 1,
+      reviewCount: 1,
+    },
+    review: {
+      "@type": "Review",
+      reviewRating: { "@type": "Rating", ratingValue: b.scoreOverall, bestRating: 5, worstRating: 1 },
+      author: { "@type": "Organization", name: "HomepageTooltester" },
+      datePublished: "2026-06-01",
+      reviewBody: b.verdict,
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Baukasten-Vergleich",
+        item: new URL("/baukasten-vergleich", siteUrl).href,
+      },
+      { "@type": "ListItem", position: 3, name: b.name },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
 ---
 
-<BaseLayout title={`${pageTitle} - HomepageTooltester`} description={pageDesc}>
+<BaseLayout title={`${pageTitle} - HomepageTooltester`} description={pageDesc} ogType="article" jsonLd={schema}>
   <div class="wrap">
     <div class="crumb">
       <a href="/">Home</a> › <a href="/baukasten-vergleich">Testberichte</a> ›

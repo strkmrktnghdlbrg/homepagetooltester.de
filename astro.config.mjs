@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
 
+import sitemap from '@astrojs/sitemap';
+
 // 301-Redirects: alte WordPress-Pfade -> neue Astro-Cluster.
 // Annahmen-basiert (Live-Inventur war zum Build-Zeitpunkt nicht moeglich) - siehe REDIRECTS.md.
 const redirects = {
@@ -54,8 +56,12 @@ const redirects = {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://www.homepagetooltester.de',
   redirects,
+
   vite: {
     plugins: [tailwindcss()]
-  }
+  },
+
+  integrations: [sitemap()]
 });
