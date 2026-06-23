@@ -1,0 +1,77 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const usecases = await getCollection("usecases");
+
+const pageTitle = "Anwendungsfälle: Welcher Baukasten passt zu meinem Projekt?";
+const pageDesc =
+  "Vom Online-Shop bis zur Restaurant-Website: Wir zeigen, welcher Homepage-Baukasten für welchen Anwendungsfall die beste Wahl ist - mit klaren Empfehlungen und Praxisvergleich.";
+
+const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+    { "@type": "ListItem", position: 2, name: "Anwendungsfälle" },
+  ],
+};
+---
+
+<BaseLayout title={`${pageTitle} - HomepageTooltester`} description={pageDesc} jsonLd={[schema]}>
+  <!-- PAGE HEAD -->
+  <div class="wrap">
+    <div class="crumb">
+      <a href="/">Home</a> › <span>Anwendungsfälle</span>
+    </div>
+    <div class="pagehead">
+      <span class="eyebrow">Anwendungsfälle</span>
+      <h1>Welcher Baukasten passt zu meinem Projekt?</h1>
+      <p>
+        Nicht jeder Baukasten ist für jedes Vorhaben gleich gut geeignet. Wir haben die
+        besten Anbieter speziell nach Branche und Anwendungsfall getestet - mit konkreten
+        Empfehlungen, die wirklich passen.
+      </p>
+      <div class="meta">
+        <span><b>{usecases.length}</b> Anwendungsfälle</span>
+        <span>Je mit Top-3-Empfehlung</span>
+        <span>Alle unabhängig getestet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- USECASE GRID -->
+  <section style="padding:40px 0 60px">
+    <div class="wrap">
+      <div class="usecase-grid">
+        {
+          usecases.map((u) => (
+            <a href={`/anwendungsfall/${u.id}`} class="uc">
+              <div class="ico">{u.data.accentEmoji}</div>
+              <h3>{u.data.heroHighlight}</h3>
+              <p>{u.data.lede}</p>
+              <span class="link">Empfehlung ansehen →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="wrap" style="margin-bottom:60px">
+    <div class="finalcta">
+      <span class="eyebrow" style="color:var(--color-sunshine)">Kein passendes Projekt dabei?</span>
+      <h2>Unser Baukasten-Finder hilft weiter</h2>
+      <p>
+        Beantworte ein paar kurze Fragen zu deinem Vorhaben und erhalte eine
+        massgeschneiderte Empfehlung.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="/baukasten-finder" class="btn btn-primary">Baukasten-Finder starten</a>
+        <a href="/baukasten-vergleich" class="btn btn-light">Zum grossen Vergleich</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

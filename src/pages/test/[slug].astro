@@ -5,13 +5,15 @@ import ScoreCard from "../../components/ScoreCard.astro";
 
 export async function getStaticPaths() {
   const builders = await getCollection("builders");
+  const articles = await getCollection("articles");
+  const usecases = await getCollection("usecases");
   return builders.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry, builders },
+    props: { entry, builders, articles, usecases },
   }));
 }
 
-const { entry, builders } = Astro.props;
+const { entry, builders, articles, usecases } = Astro.props;
 const b = entry.data;
 const { Content } = await render(entry);
 
@@ -71,6 +73,27 @@ const alternatives = builders
   .filter((x) => x.id !== entry.id)
   .sort((x, y) => x.data.rank - y.data.rank)
   .slice(0, 3);
+
+// Relevante Ratgeber: Artikel, die den Builder-Slug oder -Namen im Titel enthalten, sonst nach Datum
+const builderNameLower = b.name.toLowerCase();
+const builderSlugLower = entry.id.toLowerCase();
+const matchedArticles = articles.filter(
+  (a) =>
+    a.data.title.toLowerCase().includes(builderNameLower) ||
+    a.data.title.toLowerCase().includes(builderSlugLower) ||
+    (a.data.excerpt && a.data.excerpt.toLowerCase().includes(builderNameLower))
+);
+const fallbackArticles = articles
+  .filter((a) => !matchedArticles.find((m) => m.id === a.id))
+  .sort((a, x) => new Date(x.data.date).getTime() - new Date(a.data.date).getTime());
+const relevantArticles = [...matchedArticles, ...fallbackArticles].slice(0, 3);
+
+// Passende Anwendungsfaelle: Usecases, die diesen Builder in topBuilders haben
+const relevantUsecases = usecases.filter((u) =>
+  u.data.topBuilders?.some(
+    (tb: { builderSlug: string }) => tb.builderSlug === entry.id || tb.builderSlug === b.slug
+  )
+).slice(0, 4);
 
 const pageTitle = `${b.name} im Test 2026: Erfahrungen, Kosten & Bewertung`;
 const pageDesc = b.verdict;
@@ -212,6 +235,35 @@ const schema = [
     </div>
   </div>
 
+  <!-- RELEVANTE RATGEBER -->
+  {
+    relevantArticles.length > 0 && (
+      <div class="alts">
+        <div class="wrap">
+          <span class="eyebrow">Ratgeber</span>
+          <h2 style="margin:10px 0 0">Das könnte dich auch interessieren</h2>
+          <div class="blog-grid" style="margin-top:24px">
+            {relevantArticles.map((r) => (
+              <a class="post" href={`/ratgeber/${r.data.slug}`}>
+                <div
+                  class="thumb"
+                  style={`background-image:url('${r.data.image.url}')`}
+                />
+                <div class="body">
+                  <span class="cat">{r.data.category}</span>
+                  <h3>{r.data.title}</h3>
+                  <div class="meta">
+                    {r.data.readingTime} Lesezeit · {r.data.author}
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   <!-- ALTERNATIVES -->
   {
     alternatives.length > 0 && (
@@ -240,6 +292,27 @@ const schema = [
           </div>
         </div>
       </div>
+    )
+  }
+
+  <!-- PASSENDE ANWENDUNGSFAELLE -->
+  {
+    relevantUsecases.length > 0 && (
+      <section style="background:var(--color-pewter);padding:50px 0">
+        <div class="wrap">
+          <span class="eyebrow">Anwendungsfälle</span>
+          <h2 style="margin:10px 0 24px">Wofür eignet sich {b.name}?</h2>
+          <div class="related">
+            {relevantUsecases.map((u) => (
+              <a href={`/anwendungsfall/${u.id}`} class="rel">
+                <div class="ic">{u.data.accentEmoji}</div>
+                <div class="nm">{u.data.heroHighlight}</div>
+                <span class="lk">Empfehlung →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
     )
   }
 

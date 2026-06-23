@@ -4,13 +4,14 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
   const articles = await getCollection("articles");
+  const builders = await getCollection("builders");
   return articles.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry, articles },
+    props: { entry, articles, builders },
   }));
 }
 
-const { entry, articles } = Astro.props;
+const { entry, articles, builders } = Astro.props;
 const a = entry.data;
 const { Content } = await render(entry);
 
@@ -39,6 +40,25 @@ const others = articles.filter((x) => x.id !== entry.id);
 const sameCat = others.filter((x) => x.data.category === a.category);
 const restCat = others.filter((x) => x.data.category !== a.category);
 const related = [...sameCat, ...restCat].slice(0, 4);
+
+// Passende Baukasten-Tests: Builder suchen, deren bestFor oder Name zur Artikel-Kategorie passt
+const categoryLower = (a.category || "").toLowerCase();
+const titleLower = (a.title || "").toLowerCase();
+const excerptLower = (a.excerpt || "").toLowerCase();
+const matchedBuilders = builders.filter((bld) => {
+  const bestForLower = (bld.data.bestFor || "").toLowerCase();
+  const nameLower = (bld.data.name || "").toLowerCase();
+  return (
+    categoryLower.includes(nameLower) ||
+    titleLower.includes(nameLower) ||
+    excerptLower.includes(nameLower) ||
+    bestForLower.split(" ").some((w: string) => w.length > 3 && categoryLower.includes(w))
+  );
+}).sort((x, y) => x.data.rank - y.data.rank);
+// Fallback: Rang-1-Builder (Testsieger)
+const topBuilderRec = matchedBuilders.length > 0
+  ? matchedBuilders[0]
+  : builders.slice().sort((x, y) => x.data.rank - y.data.rank)[0];
 
 const pageDesc = a.excerpt;
 
@@ -147,6 +167,34 @@ const schema = [
           <a href="/ratgeber">→ Alle Ratgeber</a>
           <a href="/ueber-uns">→ So testen wir</a>
         </div>
+
+        {
+          topBuilderRec && (
+            <div class="verdict" style="margin-top:18px">
+              <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-slate-text);margin-bottom:10px">
+                Top-Empfehlung
+              </h4>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                <span
+                  style={`width:38px;height:38px;border-radius:9px;background:${topBuilderRec.data.color};display:grid;place-items:center;color:#fff;font-weight:900;font-size:13px;flex-shrink:0`}
+                >
+                  {topBuilderRec.data.logoText}
+                </span>
+                <div>
+                  <div style="font-weight:900;font-size:15px">{topBuilderRec.data.name}</div>
+                  <div style="font-size:12px;color:var(--color-slate-text)">{topBuilderRec.data.bestFor}</div>
+                </div>
+              </div>
+              <a
+                href={`/test/${topBuilderRec.data.slug}`}
+                class="btn btn-ghost btn-sm"
+                style="width:100%"
+              >
+                Zum {topBuilderRec.data.name}-Test →
+              </a>
+            </div>
+          )
+        }
 
         <div class="verdict" style="margin-top:18px">
           <h3 style="font-size:17px;margin-bottom:8px">Noch unentschlossen?</h3>

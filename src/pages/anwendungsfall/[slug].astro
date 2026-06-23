@@ -49,7 +49,7 @@ const schema = [
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "Anwendungsfall" },
+      { "@type": "ListItem", position: 2, name: "Anwendungsfall", item: new URL("/anwendungsfall", siteUrl).href },
       { "@type": "ListItem", position: 3, name: u.title },
     ],
   },
@@ -74,7 +74,7 @@ const schema = [
   <div class="uhero">
     <div class="wrap">
       <div class="crumb">
-        <a href="/">Home</a> › <a href="/anwendungsfall/restaurant">Anwendungsfall</a> ›
+        <a href="/">Home</a> › <a href="/anwendungsfall">Anwendungsfall</a> ›
         <span>{u.heroHighlight}</span>
       </div>
       <span class="badge badge-gold">★ Aktualisiert Juni 2026</span>
