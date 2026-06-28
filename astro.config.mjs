@@ -52,6 +52,46 @@ const redirects = {
   '/kostenlose-website-baukasten-ohne-werbung': '/ratgeber/kostenlose-homepage-baukasten',
   '/webseite-erstellen-lassen/': '/baukasten-vergleich',
   '/webseite-erstellen-lassen': '/baukasten-vergleich',
+
+  // 404-Recovery 2026-06-28 (GA4 + Wayback-Inventur): alte WP-Pfade die live 404 warfen
+  // Alte Baukasten-Reviews (1&1 = heute IONOS; Webnode/Weebly/BigCommerce nicht mehr im Test)
+  '/1und1/': '/test/ionos',
+  '/1und1': '/test/ionos',
+  '/webnode/': '/baukasten-vergleich',
+  '/webnode': '/baukasten-vergleich',
+  '/weebly/': '/baukasten-vergleich',
+  '/weebly': '/baukasten-vergleich',
+  '/big-commerce/': '/anwendungsfall/online-shop',
+  '/big-commerce': '/anwendungsfall/online-shop',
+  // alte Jimdo-Unterseiten -> konsolidiert auf den Jimdo-Testbericht
+  '/jimdo/kosten/': '/test/jimdo',
+  '/jimdo/preise/': '/test/jimdo',
+  '/jimdo/gutschein/': '/test/jimdo',
+  '/jimdo/jimdo-oder-wix/': '/test/jimdo',
+  '/jimdo/website/': '/test/jimdo',
+  '/jimdo/templates/': '/test/jimdo',
+  '/jimdo/blog/': '/test/jimdo',
+  '/jimdo/shop/': '/anwendungsfall/online-shop',
+  '/jimdo/online-shop/': '/anwendungsfall/online-shop',
+  // alte Wix-Unterseiten -> konsolidiert auf den Wix-Testbericht
+  '/wix/preise/': '/test/wix',
+  '/wix/kosten/': '/test/wix',
+  '/wix/gutschein/': '/test/wix',
+  '/wix/website/': '/test/wix',
+  '/wix/templates/': '/test/wix',
+  '/wix/blog/': '/test/wix',
+  '/wix/online-shop/': '/anwendungsfall/online-shop',
+  '/wix/wix-oder-jimdo/': '/ratgeber/wix-oder-onepage',
+  // Service-/Meta-Seiten
+  '/datenschutzerklaerung': '/datenschutz',
+  '/datenschutzerklaerung/': '/datenschutz',
+  '/kontaktformular/': '/kontakt',
+  '/hinweise-zu-werbepartner/': '/ueber-uns',
+  '/sitemap/': '/',
+  '/author/admin-22/': '/ueber-uns',
+  // alte Webnode-Q&A-Artikel
+  '/webnode/webnode-erfahrungen-ist-webnode-eine-gute-wahl-fuer-einen-homepage-baukasten/': '/baukasten-vergleich',
+  '/antwort-fuer-webnode-erfahrungen-ist-webnode-eine-gute-wahl-fuer-einen-homepage-baukasten/': '/baukasten-vergleich',
 };
 
 // https://astro.build/config

@@ -41,3 +41,31 @@
 /kostenlose-homepage-builder               /ratgeber/kostenlose-homepage-baukasten   301
 /kostenlose-website-baukasten-ohne-werbung /ratgeber/kostenlose-homepage-baukasten   301
 /webseite-erstellen-lassen                 /baukasten-vergleich                      301
+
+# 404-Recovery 2026-06-28 (GA4 + Wayback): alte WP-Pfade die live 404 warfen
+# Alte Baukasten-Reviews (1&1 = heute IONOS; Webnode/Weebly/BigCommerce nicht mehr im Test)
+/1und1                /test/ionos                  301
+/webnode              /baukasten-vergleich         301
+/weebly               /baukasten-vergleich         301
+/big-commerce         /anwendungsfall/online-shop  301
+
+# Alte Jimdo-Unterseiten (spezifische zuerst, dann Splat-Sicherheitsnetz)
+/jimdo/shop           /anwendungsfall/online-shop  301
+/jimdo/online-shop    /anwendungsfall/online-shop  301
+/jimdo/*              /test/jimdo                  301
+
+# Alte Wix-Unterseiten (spezifische zuerst, dann Splat-Sicherheitsnetz)
+/wix/online-shop      /anwendungsfall/online-shop  301
+/wix/wix-oder-jimdo   /ratgeber/wix-oder-onepage   301
+/wix/*                /test/wix                    301
+
+# Service-/Meta-Seiten
+/datenschutzerklaerung    /datenschutz   301
+/kontaktformular          /kontakt       301
+/hinweise-zu-werbepartner /ueber-uns     301
+/sitemap                  /              301
+/author/*                 /ueber-uns     301
+
+# Alte Webnode-Q&A-Artikel
+/webnode/*               /baukasten-vergleich   301
+/antwort-fuer-webnode-erfahrungen-ist-webnode-eine-gute-wahl-fuer-einen-homepage-baukasten /baukasten-vergleich 301
