@@ -11,7 +11,7 @@
  */
 export const SITE = {
   name: 'HomepageTooltester',
-  url: 'https://www.homepagetooltester.de',
+  url: 'https://homepagetooltester.de',
   tagline: 'Unabhaengiger Homepage-Baukasten-Vergleich',
   locale: 'de-DE',
 

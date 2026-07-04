@@ -96,7 +96,7 @@ const redirects = {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://www.homepagetooltester.de',
+  site: 'https://homepagetooltester.de',
   redirects,
 
   vite: {

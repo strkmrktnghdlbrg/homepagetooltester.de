@@ -99,7 +99,7 @@ const pageTitle = `${b.name} im Test 2026: Erfahrungen, Kosten & Bewertung`;
 const pageDesc = b.verdict;
 
 // --- JSON-LD: SoftwareApplication + editorial Review + Breadcrumb + FAQ ---
-const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const siteUrl = Astro.site?.href ?? "https://homepagetooltester.de/";
 const priceNum =
   parseFloat((b.priceFrom || "").replace(/[^0-9.,]/g, "").replace(",", ".")) || undefined;
 const schema = [

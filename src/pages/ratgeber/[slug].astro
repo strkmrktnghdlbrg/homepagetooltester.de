@@ -62,7 +62,7 @@ const topBuilderRec = matchedBuilders.length > 0
 
 const pageDesc = a.excerpt;
 
-const siteUrl = Astro.site?.href ?? "https://www.homepagetooltester.de/";
+const siteUrl = Astro.site?.href ?? "https://homepagetooltester.de/";
 const articleUrl = new URL(`/ratgeber/${a.slug}`, siteUrl).href;
 const articleImg = new URL(a.image.url, siteUrl).href;
 const schema = [

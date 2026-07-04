@@ -4,4 +4,4 @@ Allow: /
 # Interne Suche nicht indexieren (Thin/Duplicate vermeiden)
 Disallow: /suche
 
-Sitemap: https://www.homepagetooltester.de/sitemap-index.xml
+Sitemap: https://homepagetooltester.de/sitemap-index.xml

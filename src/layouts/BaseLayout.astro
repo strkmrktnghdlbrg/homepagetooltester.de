@@ -20,7 +20,7 @@ const {
   jsonLd = [],
 } = Astro.props;
 
-const site = Astro.site ?? new URL("https://www.homepagetooltester.de");
+const site = Astro.site ?? new URL("https://homepagetooltester.de");
 const canonical = new URL(Astro.url.pathname, site).href;
 const ogImage = new URL(image, site).href;
 
