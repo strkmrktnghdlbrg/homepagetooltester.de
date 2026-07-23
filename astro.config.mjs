@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 
+import outboundGate from './integrations/outbound-gate.mjs';
 // 301-Redirects: alte WordPress-Pfade -> neue Astro-Cluster.
 // Annahmen-basiert (Live-Inventur war zum Build-Zeitpunkt nicht moeglich) - siehe REDIRECTS.md.
 const redirects = {
@@ -103,5 +104,5 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [sitemap()]
+  integrations: [outboundGate(), sitemap()]
 });
